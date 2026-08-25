@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Team, Player, TeamColor, Language } from '../types';
 import { COLORS_MAP } from '../constants';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
+import { sound } from '../soundManager';
 
 interface Props {
   winners: Team[];
@@ -19,6 +20,10 @@ const EndGameScreen: React.FC<Props> = ({ winners, players, onRestart, language,
   const config = COLORS_MAP[winnerColor] || { bg: 'bg-indigo-600', text: 'text-white' };
 
   const isRTL = language === 'fa' || language === 'ar';
+
+  useEffect(() => {
+    sound.playWinner();
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 text-center select-none" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -106,7 +111,10 @@ const EndGameScreen: React.FC<Props> = ({ winners, players, onRestart, language,
       {/* Play Again button in neon pink */}
       <button 
         type="button"
-        onClick={onRestart}
+        onClick={() => {
+          sound.playClick();
+          onRestart();
+        }}
         className="pixel-btn pixel-btn-pink w-full py-4 text-lg font-black uppercase tracking-wider"
       >
         🔄 {t.returnMenu}

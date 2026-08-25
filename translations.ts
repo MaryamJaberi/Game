@@ -28,6 +28,20 @@ export const TRANSLATIONS: Record<Language, any> = {
     back: "Back",
     next: "Next",
     categories_title: "Categories",
+    difficulty_title: "Word Difficulty Level",
+    difficulty_hint: "Choose single words, compound terms, or proverbs",
+    difficultyLevels: {
+      easy: "Easy",
+      medium: "Medium",
+      hard: "Hard",
+      all: "Mixed (All)"
+    },
+    difficultyDescs: {
+      easy: "Single Words (Glass, Fridge, Lion...)",
+      medium: "Compound 2-Word Terms (Traffic Police, Mountain Bike...)",
+      hard: "3+ Word Phrases & Proverbs (Birds of a feather...)",
+      all: "Balanced mix of easy, medium, and hard words"
+    },
     wordsFinished: "Selected words are finished",
     categories: {
       CAT_OBJECTS: "Daily Objects",
@@ -85,7 +99,12 @@ export const TRANSLATIONS: Record<Language, any> = {
         {
           id: "setup",
           title: "Game Preparation (Setup)",
-          body: "Before starting:\n- Select the number of players.\n- Specify the number of rounds (minimum 3).\n- Choose the duration of each round (minimum 90 seconds).\n- Select your preferred word categories.\n- Enter player names.\nAfter these steps, players are displayed on a circle, and partners are positioned opposite each other."
+          body: "Before starting:\n- Select the number of players.\n- Choose word difficulty level (Easy, Medium, Hard, or Mixed).\n- Specify the number of rounds (minimum 3).\n- Choose the duration of each round (minimum 90 seconds).\n- Select your preferred word categories.\n- Enter player names.\nAfter these steps, players are displayed on a circle, and partners are positioned opposite each other."
+        },
+        {
+          id: "difficulty",
+          title: "3 Difficulty Levels",
+          body: "You can customize the challenge using three distinct difficulty tiers:\n1. 🟢 Easy: Single, everyday words (e.g. Glass, Fridge, Lion, Shoes).\n2. 🟡 Medium: Compound 2-word combinations (e.g. Washing Machine, Pomegranate Juice, Mountain Bike).\n3. 🔴 Hard: 3+ word phrases, proverbs, and idioms (e.g. 'Birds of a feather flock together', 'Don't count your chickens').\n4. 🌈 Mixed: A randomized blend across all tiers."
         },
         {
           id: "start",
@@ -94,8 +113,8 @@ export const TRANSLATIONS: Record<Language, any> = {
         },
         {
           id: "turns",
-          title: "Changing Turns",
-          body: "As soon as the word is guessed correctly:\n- The player holding the phone taps the screen.\n- Passes the phone to the person on their right.\n- A new word is displayed.\n- It becomes the next player's turn."
+          title: "Changing Turns & Fast Mode",
+          body: "As soon as the word is guessed correctly, tap the 'Correct' button or the card.\n\nTwo transition modes are available in Settings:\n1. ⚡ Fast Hot-Potato Mode (Default): The turn and a new word immediately open for the next player without interruption, providing maximum adrenaline and speed.\n2. 📱 Pass-Phone Ready Screen (Optional): A secrecy screen appears prompting you to pass the phone. The word stays hidden until the next player taps 'I am ready!'."
         },
         {
           id: "timers",
@@ -154,6 +173,20 @@ export const TRANSLATIONS: Record<Language, any> = {
     back: "بازگشت",
     next: "مرحله بعد",
     categories_title: "دسته‌بندی‌ها",
+    difficulty_title: "سطح سختی کلمات",
+    difficulty_hint: "انتخاب سطح سختی، کلمات ترکیبی یا ضرب‌المثل‌ها",
+    difficultyLevels: {
+      easy: "آسان",
+      medium: "متوسط",
+      hard: "سخت",
+      all: "ترکیبی (همه)"
+    },
+    difficultyDescs: {
+      easy: "تک‌کلمه‌ای (لیوان، یخچال، شیر، ماشین...)",
+      medium: "کلمات ترکیبی ۲ کلمه‌ای (ماشین لباسشویی، آب انار، عینک آفتابی...)",
+      hard: "عبارات ۳+ کلمه‌ای و ضرب‌المثل‌ها (جوجه را آخر پاییز می‌شمارند...)",
+      all: "ترکیب تصادفی و متنوع از تمام سطوح کلمات"
+    },
     wordsFinished: "کلمات انتخابی تمام شد",
     categories: {
       CAT_OBJECTS: "اشیای روزمره",
@@ -211,7 +244,12 @@ export const TRANSLATIONS: Record<Language, any> = {
         {
           id: "setup",
           title: "آماده‌سازی بازی (ستاپ)",
-          body: "قبل از شروع بازی:\n- تعداد بازیکنان را انتخاب کنید.\n- تعداد دورهای بازی را مشخص کنید (حداقل ۳ دور).\n- مدت زمان هر دور را انتخاب کنید (حداقل ۹۰ ثانیه).\n- دسته‌بندی‌های کلمات دلخواه را انتخاب کنید.\n- اسم بازیکنان را وارد کنید.\nپس از این مراحل، بازیکنان روی یک دایره نمایش داده می‌شوند و هم‌گروهی‌ها روبه‌روی هم قرار می‌گیرند."
+          body: "قبل از شروع بازی:\n- تعداد بازیکنان را انتخاب کنید.\n- سطح سختی کلمات (آسان، متوسط، سخت یا ترکیبی) را انتخاب کنید.\n- تعداد دورهای بازی را مشخص کنید (حداقل ۳ دور).\n- مدت زمان هر دور را انتخاب کنید (حداقل ۹۰ ثانیه).\n- دسته‌بندی‌های کلمات دلخواه را انتخاب کنید.\n- اسم بازیکنان را وارد کنید.\nپس از این مراحل، بازیکنان روی یک دایره نمایش داده می‌شوند و هم‌گروهی‌ها روبه‌روی هم قرار می‌گیرند."
+        },
+        {
+          id: "difficulty",
+          title: "۳ سطح سختی کلمات",
+          body: "شما می‌توانید سطح چالش بازی را تنظیم کنید:\n۱. 🟢 آسان: کلمات ساده و تک‌کلمه‌ای مانند لیوان، یخچال، شیر، کفش.\n۲. 🟡 متوسط: کلمات ترکیبی دو کلمه‌ای مانند ماشین لباسشویی، آب انار، عینک آفتابی، دوچرخه دنده‌ای.\n۳. 🔴 سخت: عبارات چندکلمه‌ای و ضرب‌المثل‌های اصیل مانند «جوجه را آخر پاییز می‌شمارند»، «با یک گل بهار نمی‌شود» و «کبوتر با کبوتر باز با باز».\n۴. 🌈 ترکیبی (همه): چالش ترکیبی از تمام سطوح کلمات."
         },
         {
           id: "start",
@@ -220,8 +258,8 @@ export const TRANSLATIONS: Record<Language, any> = {
         },
         {
           id: "turns",
-          title: "تغییر نوبت",
-          body: "به‌محض حدس درست کلمه:\n- بازیکنی که گوشی را در دست دارد روی صفحه ضربه می‌زند.\n- گوشی را به نفر سمت راست خود می‌دهد.\n- کلمه جدید نمایش داده می‌شود.\n- نوبت به بازیکن بعدی می‌رسد."
+          title: "نحوه تغییر نوبت و حالت‌های بازی",
+          body: "به‌محض حدس درست کلمه توسط یارتان، روی دکمه «درسته!» یا خود کارت کلمه ضربه بزنید.\n\nدو حالت انتقال نوبت در بخش تنظیمات در دسترس است:\n۱. ⚡ حالت سریع و پرهیجان (پیش‌فرض): نوبت و کلمه جدید بلافاصله برای نفر بعد باز می‌شود و بدون کوچک‌ترین وقفه، هیجان بمب ساعتی را تجربه می‌کنید.\n۲. 📱 حالت تحویل گوشی (اختیاری): صفحه‌ای برای تحویل گوشی ظاهر می‌شود و کلمه جدید تا زمان زدن دکمه «من آماده‌ام!» توسط نفر بعدی مخفی می‌ماند."
         },
         {
           id: "timers",

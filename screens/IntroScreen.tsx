@@ -2,6 +2,7 @@ import React from 'react';
 import { Language } from '../types';
 import { TRANSLATIONS, NATIVE_LANGUAGE_NAMES } from '../translations';
 import { TeamMascot } from '../components/Mascots';
+import { sound } from '../soundManager';
 
 interface Props {
   language: Language;
@@ -43,7 +44,12 @@ const IntroScreen: React.FC<Props> = ({ language, onLanguageChange, onNext, onOp
       </div>
 
       {/* Main Center Mascot Character */}
-      <div className="my-4 flex flex-col items-center">
+      <div 
+        className="my-4 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"
+        onClick={() => {
+          sound.playCorrect();
+        }}
+      >
         <TeamMascot color="PARTY" size={140} className="animate-party-float drop-shadow-xl" />
         <div className="mt-1 px-4 py-1.5 border-2 border-black bg-white rounded-full text-[11px] font-bold shadow-[2px_2px_0px_0px_#000000]" dir={isRTL ? 'rtl' : 'ltr'}>
           {language === 'fa' ? '🕹️ آماده‌ی هیجانی؟ گوشی رو بچرخون!' : '🕹️ Ready! Pass the phone!'}
@@ -62,7 +68,10 @@ const IntroScreen: React.FC<Props> = ({ language, onLanguageChange, onNext, onOp
             {languages.map(l => (
               <button 
                 key={l}
-                onClick={() => onLanguageChange(l)}
+                onClick={() => {
+                  sound.playToggle();
+                  onLanguageChange(l);
+                }}
                 className={`py-1.5 px-0.5 rounded-lg font-bold text-[10px] transition-all border-2 border-black text-center ${
                   language === l 
                   ? 'bg-[#ff007f] text-white shadow-[2px_2px_0px_0px_#000000] -translate-x-[1px] -translate-y-[1px]' 
@@ -78,7 +87,10 @@ const IntroScreen: React.FC<Props> = ({ language, onLanguageChange, onNext, onOp
         {/* Primary Menu Actions */}
         <div className="flex flex-col gap-3">
           <button 
-            onClick={onNext}
+            onClick={() => {
+              sound.playStartGame();
+              onNext();
+            }}
             className="pixel-btn pixel-btn-pink w-full py-4 text-xl font-display uppercase tracking-wider"
           >
             🕹️ {t.newGame}
@@ -86,14 +98,20 @@ const IntroScreen: React.FC<Props> = ({ language, onLanguageChange, onNext, onOp
           
           <div className="grid grid-cols-2 gap-3">
             <button 
-              onClick={onOpenHistory}
+              onClick={() => {
+                sound.playClick();
+                onOpenHistory();
+              }}
               className="pixel-btn pixel-btn-cyan py-3 text-sm font-bold"
             >
               🏆 {t.history}
             </button>
 
             <button 
-              onClick={onOpenHelp}
+              onClick={() => {
+                sound.playClick();
+                onOpenHelp();
+              }}
               className="pixel-btn pixel-btn-yellow py-3 text-sm font-bold"
             >
               📖 {t.guide}

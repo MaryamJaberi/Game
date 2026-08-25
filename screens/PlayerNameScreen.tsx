@@ -3,6 +3,7 @@ import { GameSettings, TeamColor } from '../types';
 import { COLORS_MAP } from '../constants';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
+import { sound } from '../soundManager';
 
 interface Props {
   settings: GameSettings;
@@ -43,7 +44,10 @@ const PlayerNameScreen: React.FC<Props> = ({ settings, onSave, onStart, onBack, 
           <h2 className="text-lg font-bold uppercase tracking-wider">{t.playerNames}</h2>
         </div>
         <button 
-          onClick={onOpenHelp} 
+          onClick={() => {
+            sound.playClick();
+            onOpenHelp();
+          }} 
           className="px-3 py-1 bg-[#ff007f] text-white border-2 border-black font-bold text-xs rounded hover:bg-pink-600 transition-colors"
         >
           {t.guide}
@@ -87,13 +91,21 @@ const PlayerNameScreen: React.FC<Props> = ({ settings, onSave, onStart, onBack, 
       {/* Navigation Buttons */}
       <div className="flex gap-4 mt-3">
         <button 
-          onClick={onBack} 
+          onClick={() => {
+            sound.playClick();
+            onBack();
+          }} 
           className="pixel-btn pixel-btn-dark flex-1 py-3.5 text-sm font-bold uppercase tracking-wider"
         >
           {t.back}
         </button>
         <button 
-          onClick={() => isReady && onStart()} 
+          onClick={() => {
+            if (isReady) {
+              sound.playStartGame();
+              onStart();
+            }
+          }} 
           disabled={!isReady}
           className={`pixel-btn flex-[2] py-3.5 text-base font-black uppercase tracking-wider ${
             isReady ? 'pixel-btn-lime' : 'disabled'

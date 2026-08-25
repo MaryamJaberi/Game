@@ -1,20 +1,52 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# دور (DOUR) - بازی کلمات و هیجان تیمی
 
-# Run and deploy your AI Studio app
+بازی دورهمی جذاب و سریع کلمات (DOUR / Turn) ساخته شده با React، TypeScript و Tailwind CSS همراه با افکت‌های صوتی و موسیقی پویا و پشتیبانی کامل از زبان‌های فارسی و انگلیسی.
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/drive/1GndJytuMxZL9YqEW-ghnhPmBiRe-IhoP
+## 🚀 راهنمای انتشار روی گیت‌هاب پیجز (GitHub Pages)
 
-## Run Locally
+این پروژه کاملاً برای انتشار روی **GitHub Pages** پیکربندی و آماده شده است (`base: './'` در Vite و ورک‌فلو خودکار GitHub Actions اضافه شده است).
 
-**Prerequisites:**  Node.js
+### روش ۱: انتشار خودکار با GitHub Actions (ساده‌ترین روش)
 
+1. مخزن (Repository) این پروژه را روی حساب گیت‌هاب خود پوش (`git push`) کنید.
+2. در گیت‌هاب به تب **Settings** مخزن خود بروید.
+3. از منوی سمت چپ گزینه **Pages** را انتخاب کنید.
+4. در بخش **Build and deployment > Source**، گزینه **GitHub Actions** را انتخاب کنید.
+5. به تب **Actions** بروید؛ مشاهده می‌کنید که ورک‌فلو `Deploy to GitHub Pages` به صورت خودکار اجرا شده و لینک سایت شما در دسترس قرار می‌گیرد:
+   `https://<YOUR_USERNAME>.github.io/<REPO_NAME>/`
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+
+### روش ۲: ساخت بیلد دستی (Manual Build)
+
+```bash
+# ۱. نصب پیش‌نیازها
+npm install
+
+# ۲. ساخت نسخه نهایی
+npm run build
+
+# پوشه dist ساخته شده حاوی تمام فایل‌های استاتیک وب‌سایت آماده انتشار است.
+```
+
+---
+
+## 🛠️ اجرای محلی (Local Development)
+
+```bash
+# نصب وابستگی‌ها
+npm install
+
+# اجرای سرور توسعه محلی
+npm run dev
+```
+
+---
+
+## ✨ ویژگی‌های برجسته
+- 🟢 **۳ سطح سختی هوشمند کلمات**: آسان (تک‌کلمه‌ای)، متوسط (ترکیبی ۲ کلمه‌ای)، سخت (ضرب‌المثل‌ها و اصطلاحات ۳+ کلمه‌ای) و حالت ترکیبی.
+- 🎵 **موتور صوتی دینامیک و غیرتکراری**: ۶ ملودی مجزا برای حدس درست، تیک‌تاک چوبی آرام‌بخش (به جای بوق ممتد و آزاردهنده)، آلارم اوج هیجان ۵ ثانیه آخر، و موسیقی امبینت منو.
+- ⚡ **دکمه شناور Undo**: بازگشت سریع نوبت در صورت لمس تصادفی بدون توقف بازی.
+- 📱 **پشتیبانی کامل از موبایل و تبلت**: سازگار با لمس سریع (Fast Tap)، ژیروسکوپ و ویبره هوشمند.

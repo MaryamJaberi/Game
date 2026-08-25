@@ -3,6 +3,7 @@ import { GameSettings, Team, Player, TeamColor } from '../types';
 import { COLORS_MAP } from '../constants';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
+import { sound } from '../soundManager';
 
 interface Props {
   settings: GameSettings;
@@ -39,7 +40,10 @@ const SeatingConfirmScreen: React.FC<Props> = ({
           </h2>
         </div>
         <button 
-          onClick={onOpenHelp} 
+          onClick={() => {
+            sound.playClick();
+            onOpenHelp();
+          }} 
           className="px-3 py-1 bg-[#43D9FF] text-black border-2 border-black font-bold text-xs rounded hover:bg-cyan-300 transition-colors"
         >
           {t.guide}
@@ -181,13 +185,19 @@ const SeatingConfirmScreen: React.FC<Props> = ({
       {/* Buttons */}
       <div className="flex gap-3 mt-2">
         <button 
-          onClick={onBack} 
+          onClick={() => {
+            sound.playClick();
+            onBack();
+          }} 
           className="pixel-btn pixel-btn-dark flex-1 py-3 text-sm font-bold uppercase tracking-wider"
         >
           {t.back}
         </button>
         <button 
-          onClick={onConfirm} 
+          onClick={() => {
+            sound.playStartGame();
+            onConfirm();
+          }} 
           className="pixel-btn pixel-btn-lime flex-[2] py-3 text-base font-black uppercase tracking-wider text-black"
         >
           🚀 {settings.language === 'fa' ? 'شروع بازی' : 'Start Round 1'}

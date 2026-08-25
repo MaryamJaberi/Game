@@ -10,14 +10,18 @@ import SeatingConfirmScreen from './screens/SeatingConfirmScreen';
 import GameplayScreen from './screens/GameplayScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import HelpScreen from './screens/HelpScreen';
+import { sound } from './soundManager';
 
 const DEFAULT_SETTINGS: GameSettings = {
   playerCount: 4,
   roundsCount: 3,
   roundDuration: 90,
+  difficulty: 'easy',
   selectedCategories: ["CAT_OBJECTS", "CAT_ANIMALS", "CAT_FOOD"],
   playerNames: Array(8).fill(''),
-  language: 'fa'
+  language: 'fa',
+  passPhoneScreenEnabled: false,
+  soundEnabled: true
 };
 
 const App: React.FC = () => {
@@ -39,6 +43,7 @@ const App: React.FC = () => {
   const [shuffledPool, setShuffledPool] = useState<number[]>([]);
   const [poolPointer, setPoolPointer] = useState(0);
   const [currentWord, setCurrentWord] = useState('');
+  const [currentWordDifficulty, setCurrentWordDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
   const [swapCooldown, setSwapCooldown] = useState(20000);
   const [isPoolExhausted, setIsPoolExhausted] = useState(false);
 
@@ -64,6 +69,16 @@ const App: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const isSoundOn = settings.soundEnabled ?? true;
+    sound.setSoundEnabled(isSoundOn);
+    if (isSoundOn && currentScreen !== 'GAME') {
+      sound.startMenuBGM();
+    } else if (currentScreen === 'GAME') {
+      sound.stopMenuBGM();
+    }
+  }, [settings.soundEnabled, currentScreen]);
+
   const saveSettings = (newSettings: GameSettings) => {
     setSettings(newSettings);
     localStorage.setItem('dor_settings', JSON.stringify(newSettings));
@@ -85,6 +100,7 @@ const App: React.FC = () => {
       
       if (wordData) {
         setCurrentWord(wordData.words[settings.language] || wordData.words['en']);
+        setCurrentWordDifficulty(wordData.difficulty || 'easy');
       }
       
       setSwapCooldown(20000);
@@ -121,10 +137,26 @@ const App: React.FC = () => {
       };
     });
 
-    // 1. Calculate pool of all words in all selected categories
-    const relevantPoolIndices = WORD_BANK
-      .map((w, i) => settings.selectedCategories.includes(w.category) ? i : -1)
+    // 1. Calculate pool of words filtered by selected categories AND chosen difficulty level
+    const targetDifficulty = settings.difficulty || 'easy';
+    let relevantPoolIndices = WORD_BANK
+      .map((w, i) => {
+        const catMatch = settings.selectedCategories.includes(w.category);
+        const diffMatch = targetDifficulty === 'all' || w.difficulty === targetDifficulty;
+        return (catMatch && diffMatch) ? i : -1;
+      })
       .filter(i => i !== -1);
+    
+    // Fallback: If no words match the combination, relax category constraint
+    if (relevantPoolIndices.length === 0) {
+      relevantPoolIndices = WORD_BANK
+        .map((w, i) => (targetDifficulty === 'all' || w.difficulty === targetDifficulty ? i : -1))
+        .filter(i => i !== -1);
+    }
+    // Ultimate fallback: All words
+    if (relevantPoolIndices.length === 0) {
+      relevantPoolIndices = WORD_BANK.map((_, i) => i);
+    }
     
     // 2. Shuffle once for the whole match
     const sessionPool = [...relevantPoolIndices].sort(() => Math.random() - 0.5);
@@ -144,6 +176,7 @@ const App: React.FC = () => {
       const firstWordData = WORD_BANK[sessionPool[0]];
       if (firstWordData) {
         setCurrentWord(firstWordData.words[settings.language] || firstWordData.words['en']);
+        setCurrentWordDifficulty(firstWordData.difficulty || 'easy');
       }
       setPoolPointer(1);
     }
@@ -276,10 +309,11 @@ const App: React.FC = () => {
         />
       )}
 
-      {/* 4. ACTIVE GAMEPLAY (ACTIVE_TURN, PASS_PHONE, PAUSED, ROUND_ENDED, TEAM_ELIMINATED, WORD_EXHAUSTION, GAME_ENDED, WINNER_SCREEN) */}
+      {/* 4. ACTIVE GAMEPLAY (ACTIVE_TURN, PAUSED, ROUND_ENDED, TEAM_ELIMINATED, WORD_EXHAUSTION, GAME_ENDED, WINNER_SCREEN) */}
       {currentScreen === 'GAME' && (
         <GameplayScreen 
           settings={settings}
+          onUpdateSettings={saveSettings}
           gameStatus={gameStatus}
           setGameStatus={setGameStatus}
           teams={teams}
@@ -292,6 +326,7 @@ const App: React.FC = () => {
           roundTimer={roundTimer}
           setRoundTimer={setRoundTimer}
           currentWord={currentWord}
+          currentWordDifficulty={currentWordDifficulty}
           setCurrentWord={setCurrentWord}
           swapCooldown={swapCooldown}
           onGetNextWord={getNextWord}

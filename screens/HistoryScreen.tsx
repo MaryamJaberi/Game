@@ -3,6 +3,7 @@ import { GameHistoryEntry, TeamColor, Language } from '../types';
 import { COLORS_MAP } from '../constants';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
+import { sound } from '../soundManager';
 
 interface Props {
   language: Language;
@@ -23,7 +24,10 @@ const HistoryScreen: React.FC<Props> = ({ language, history, onBack }) => {
           <h2 className="text-lg font-black uppercase tracking-wider">{t.history}</h2>
         </div>
         <button 
-          onClick={onBack} 
+          onClick={() => {
+            sound.playClick();
+            onBack();
+          }} 
           className="w-16 h-9 flex items-center justify-center bg-[#00d2ff] hover:bg-cyan-400 text-black border-2 border-black font-black text-xs rounded-lg active:translate-y-0.5"
         >
           {t.back}
@@ -89,7 +93,10 @@ const HistoryScreen: React.FC<Props> = ({ language, history, onBack }) => {
       {/* Return footer tab */}
       <div className="p-4 bg-slate-100 border-t-4 border-black z-10">
         <button 
-          onClick={onBack} 
+          onClick={() => {
+            sound.playClick();
+            onBack();
+          }} 
           className="pixel-btn pixel-btn-dark w-full py-4 text-base font-black uppercase tracking-wider"
         >
           🎮 {t.back}

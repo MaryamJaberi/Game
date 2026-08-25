@@ -3,6 +3,7 @@ import { GameSettings } from '../types';
 import { CATEGORIES } from '../constants';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
+import { sound } from '../soundManager';
 
 interface Props {
   settings: GameSettings;
@@ -17,6 +18,7 @@ const CategoryScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onO
   const isRTL = settings.language === 'fa' || settings.language === 'ar';
   
   const toggleCategory = (catKey: string) => {
+    sound.playToggle();
     let selected = [...settings.selectedCategories];
     if (selected.includes(catKey)) {
       if (selected.length > 1) {
@@ -59,7 +61,10 @@ const CategoryScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onO
           <h2 className="text-lg font-bold uppercase tracking-wider">{t.categories_title || t.categories.CAT_TITLE || 'Categories'}</h2>
         </div>
         <button 
-          onClick={onOpenHelp} 
+          onClick={() => {
+            sound.playClick();
+            onOpenHelp();
+          }} 
           className="px-3 py-1 bg-[#00d2ff] text-black border-2 border-black font-bold text-xs rounded hover:bg-cyan-400 transition-colors"
         >
           {t.guide}
@@ -118,13 +123,19 @@ const CategoryScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onO
       {/* Footer Navigation */}
       <div className="flex gap-4 mt-2">
         <button 
-          onClick={onBack} 
+          onClick={() => {
+            sound.playClick();
+            onBack();
+          }} 
           className="pixel-btn pixel-btn-dark flex-1 py-3.5 text-sm font-bold uppercase tracking-wider"
         >
           {t.back}
         </button>
         <button 
-          onClick={onNext} 
+          onClick={() => {
+            sound.playClick();
+            onNext();
+          }} 
           className="pixel-btn pixel-btn-pink flex-[2] py-3.5 text-base font-black uppercase tracking-wider"
         >
           {t.next} ⚽

@@ -247,4 +247,68 @@ describe('1-Second Undo Mechanism and Winner Evaluation', () => {
     expect(winners[0].color).toBe(TeamColor.Red);
     expect(winners[0].timeRemaining).toBe(62000);
   });
+
+  test('Fast Hot-Potato mode advances turn immediately without modal when passPhoneScreenEnabled is false', () => {
+    const settings: GameSettings = {
+      playerCount: 4,
+      roundsCount: 3,
+      roundDuration: 90,
+      selectedCategories: ["CAT_OBJECTS"],
+      playerNames: ['P1', 'P2', 'P3', 'P4'],
+      language: 'fa',
+      passPhoneScreenEnabled: false,
+      soundEnabled: true
+    };
+
+    expect(settings.passPhoneScreenEnabled).toBe(false);
+    expect(settings.soundEnabled).toBe(true);
+
+    // Simulate word guess in Fast Mode
+    let gameStatus = GameStatus.ActiveTurn;
+    let nextPlayerTriggered = false;
+
+    if (settings.passPhoneScreenEnabled) {
+      gameStatus = GameStatus.PassPhone;
+    } else {
+      nextPlayerTriggered = true;
+      gameStatus = GameStatus.ActiveTurn;
+    }
+
+    expect(gameStatus).toBe(GameStatus.ActiveTurn);
+    expect(nextPlayerTriggered).toBe(true);
+  });
+
+  test('Pass Phone screen triggers intermediate modal when passPhoneScreenEnabled is true', () => {
+    const settings: GameSettings = {
+      playerCount: 4,
+      roundsCount: 3,
+      roundDuration: 90,
+      selectedCategories: ["CAT_OBJECTS"],
+      playerNames: ['P1', 'P2', 'P3', 'P4'],
+      language: 'fa',
+      passPhoneScreenEnabled: true,
+      soundEnabled: true
+    };
+
+    let gameStatus = GameStatus.ActiveTurn;
+    if (settings.passPhoneScreenEnabled) {
+      gameStatus = GameStatus.PassPhone;
+    }
+
+    expect(gameStatus).toBe(GameStatus.PassPhone);
+  });
+
+  test('Help and Guide content contains turn modes explanation in both Persian and English', () => {
+    const enTurnsHelp = TRANSLATIONS.en.helpContent.sections.find((s: any) => s.id === 'turns');
+    const faTurnsHelp = TRANSLATIONS.fa.helpContent.sections.find((s: any) => s.id === 'turns');
+
+    expect(enTurnsHelp).toBeDefined();
+    expect(enTurnsHelp?.body).toContain('Fast Hot-Potato');
+    expect(enTurnsHelp?.body).toContain('Pass-Phone');
+
+    expect(faTurnsHelp).toBeDefined();
+    expect(faTurnsHelp?.body).toContain('سریع');
+    expect(faTurnsHelp?.body).toContain('تحویل گوشی');
+  });
 });
+

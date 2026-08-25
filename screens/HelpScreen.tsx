@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Language } from '../types';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
+import { sound } from '../soundManager';
 
 interface Props {
   language: Language;
@@ -24,6 +25,11 @@ const HelpScreen: React.FC<Props> = ({ language, onClose, initialSection }) => {
     }
   }, [initialSection]);
 
+  const handleClose = () => {
+    sound.playClick();
+    onClose();
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-pixel-grid overflow-hidden select-none" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header Panel */}
@@ -33,7 +39,7 @@ const HelpScreen: React.FC<Props> = ({ language, onClose, initialSection }) => {
           <h2 className="text-lg font-black uppercase tracking-wider">{help.title || t.guide}</h2>
         </div>
         <button 
-          onClick={onClose} 
+          onClick={handleClose} 
           className="w-9 h-9 flex items-center justify-center bg-[#ff007f] text-white border-2 border-black font-black hover:bg-pink-600 rounded-lg active:translate-y-0.5"
         >
           ✕
@@ -77,7 +83,7 @@ const HelpScreen: React.FC<Props> = ({ language, onClose, initialSection }) => {
       {/* Footer Return Drawer */}
       <div className="p-4 bg-slate-100 border-t-4 border-black z-10 flex gap-4">
         <button 
-          onClick={onClose} 
+          onClick={handleClose} 
           className="pixel-btn pixel-btn-pink w-full py-4 text-base font-black uppercase tracking-wider"
         >
           🕹️ {t.resume}

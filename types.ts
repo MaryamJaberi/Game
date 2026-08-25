@@ -23,13 +23,18 @@ export interface Team {
   playerIds: number[];
 }
 
+export type DifficultyLevel = 'easy' | 'medium' | 'hard' | 'all';
+
 export interface GameSettings {
   playerCount: 4 | 6 | 8;
   roundsCount: number;
   roundDuration: number;
+  difficulty?: DifficultyLevel;
   selectedCategories: string[];
   playerNames: string[];
   language: Language;
+  soundEnabled?: boolean;
+  passPhoneScreenEnabled?: boolean;
 }
 
 export interface GameHistoryEntry {
