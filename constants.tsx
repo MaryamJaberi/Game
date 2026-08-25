@@ -1,21 +1,50 @@
-
 import { TeamColor } from './types';
 
-export const COLORS_MAP: Record<TeamColor, { bg: string, text: string, hex: string, surface: string, border: string }> = {
-  [TeamColor.Blue]: { bg: 'bg-[#4AA8FF]', text: 'text-white', hex: '#4AA8FF', surface: '#1E3A5F', border: '#4AA8FF' },
-  [TeamColor.Red]: { bg: 'bg-[#FF6363]', text: 'text-white', hex: '#FF6363', surface: '#4A1E29', border: '#FF6363' },
-  [TeamColor.Green]: { bg: 'bg-[#6CFF7D]', text: 'text-black', hex: '#6CFF7D', surface: '#1E4A2A', border: '#6CFF7D' },
-  [TeamColor.Yellow]: { bg: 'bg-[#FFD447]', text: 'text-black', hex: '#FFD447', surface: '#4A431E', border: '#FFD447' },
+export const COLORS_MAP: Record<TeamColor, { bg: string, text: string, hex: string, surface: string, border: string, glow: string }> = {
+  [TeamColor.Blue]: { 
+    bg: 'bg-[#00F0FF]', 
+    text: 'text-slate-950', 
+    hex: '#00F0FF', 
+    surface: '#001D3D', 
+    border: '#00F0FF',
+    glow: 'rgba(0, 240, 255, 0.7)'
+  },
+  [TeamColor.Red]: { 
+    bg: 'bg-[#FF1058]', 
+    text: 'text-white', 
+    hex: '#FF1058', 
+    surface: '#380016', 
+    border: '#FF1058',
+    glow: 'rgba(255, 16, 88, 0.7)'
+  },
+  [TeamColor.Green]: { 
+    bg: 'bg-[#39FF14]', 
+    text: 'text-slate-950', 
+    hex: '#39FF14', 
+    surface: '#002B11', 
+    border: '#39FF14',
+    glow: 'rgba(57, 255, 20, 0.7)'
+  },
+  [TeamColor.Yellow]: { 
+    bg: 'bg-[#FFE600]', 
+    text: 'text-slate-950', 
+    hex: '#FFE600', 
+    surface: '#332600', 
+    border: '#FFE600',
+    glow: 'rgba(255, 230, 0, 0.7)'
+  },
 };
 
+// High-Energy Party & Co SHOCK YOU! Color Palette (Image 1)
 export const UI_COLORS = {
-  bgPrimary: '#17142C',
-  bgSecondary: '#241B3D',
-  correct: '#9CFF57',
-  passSwap: '#43D9FF',
-  danger: '#FF6B6B',
-  darkBorder: '#181425',
-  neonPink: '#FF007F'
+  shockPink: '#FF007F',        // Hot Pink / Magenta (Box background & accents)
+  shockYellow: '#FFE600',      // Electric Yellow (Lightning & Shock badges)
+  shockCyan: '#00F0FF',        // Electric Turquoise / Sky (Zig-zags & titles)
+  shockPurple: '#7B2CBF',      // Electric Purple / Violet (Borders & accents)
+  deepIndigo: '#160430',       // Shock Deep Violet / Navy (Dark canvas & 3D shadows)
+  darkBorder: '#160430',       // Bold Border Color
+  neonLime: '#39FF14',         // Neon Lime Green (Success & Correct actions)
+  dangerRed: '#FF2A6D',        // Neon Danger Red
 };
 
 // Use identifiers as keys for i18n lookup

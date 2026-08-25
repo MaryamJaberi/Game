@@ -3,6 +3,7 @@ import { Team, Player, TeamColor, Language } from '../types';
 import { COLORS_MAP } from '../constants';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
+import { NeonTrophy, NeonCrown, NeonLightning, NeonSparkle } from '../components/NeonIcons';
 import { sound } from '../soundManager';
 
 interface Props {
@@ -17,7 +18,7 @@ const EndGameScreen: React.FC<Props> = ({ winners, players, onRestart, language,
   const t = TRANSLATIONS[language];
   const isTie = winners.length > 1;
   const winnerColor = winners[0]?.color || TeamColor.Blue;
-  const config = COLORS_MAP[winnerColor] || { bg: 'bg-indigo-600', text: 'text-white' };
+  const config = COLORS_MAP[winnerColor] || { bg: 'bg-[#00F0FF]', text: 'text-[#160430]', hex: '#00F0FF' };
 
   const isRTL = language === 'fa' || language === 'ar';
 
@@ -25,86 +26,98 @@ const EndGameScreen: React.FC<Props> = ({ winners, players, onRestart, language,
     sound.playWinner();
   }, []);
 
+  function labelWinnerNames(teamId: number): string {
+    return players.filter(p => p.teamId === teamId).map(p => p.name).join(' & ');
+  }
+
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-6 text-center select-none" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex-1 flex flex-col items-center justify-center p-5 text-center select-none" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Pool warning banner */}
       {isPoolExhausted && (
-        <div className="mb-4 px-4 py-2 bg-yellow-100 border-4 border-black text-black rounded-xl font-bold text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
-           ⚠️ <span>{t.wordsFinished}</span>
+        <div className="mb-3 px-4 py-2 bg-[#FFE600] border-[2.5px] border-[#160430] text-[#160430] rounded-2xl font-black text-xs shadow-[2px_2px_0px_0px_#160430] flex items-center gap-2">
+          <NeonLightning size={16} color="#160430" glow={false} />
+          <span>{t.wordsFinished}</span>
         </div>
       )}
 
-      {/* Dazzling Trophy Icon wrapper */}
-      <div className="mb-6 relative animate-bounce">
-        <div className="absolute -inset-2 bg-yellow-300 rounded-full blur opacity-35 animate-pulse"></div>
-        <svg className="w-24 h-24 text-yellow-400 mx-auto drop-shadow-[5px_5px_0px_#000000] relative" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-          <circle cx="10" cy="8" r="4" fill="#000" />
-          <circle cx="10" cy="8" r="2.5" fill="#ffd200" />
-        </svg>
+      {/* Dazzling Neon Trophy */}
+      <div className="mb-3 relative animate-bounce">
+        <div className="absolute -inset-3 bg-[#FFE600] rounded-full blur-xl opacity-40 animate-pulse"></div>
+        <NeonTrophy size={80} color="#FFE600" />
       </div>
 
-      {/* Victory Header Card */}
-      <div className="pixel-card-neon bg-[#190040] text-white p-5 w-full mb-6">
-        <h1 className="text-3xl font-black font-display uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-500">
-          🏆 {isTie ? t.tie : winners.length === 1 ? t.winner : t.winners} 🏆
-        </h1>
-        <p className="text-[10px] text-cyan-300 font-bold uppercase tracking-widest mt-1">
-          {language === 'fa' ? 'ماجراجویی به پایان رسید!' : 'THE ADVENTURE COMPLETED!'}
+      {/* Victory Header Card with Party & Co SHOCK 3D Border */}
+      <div className="pixel-card-shock bg-gradient-to-br from-[#1C002B] via-[#2D0658] to-[#160430] text-white p-5 w-full mb-3.5 border-[3.5px] border-[#160430] shadow-[5px_5px_0px_0px_#160430] rounded-3xl">
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <NeonSparkle size={18} color="#00F0FF" />
+          <h1 className="text-2xl sm:text-3xl font-black font-display uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#FFE600] via-[#FF007F] to-[#00F0FF]">
+            {isTie ? t.tie : winners.length === 1 ? t.winner : t.winners}
+          </h1>
+          <NeonSparkle size={18} color="#FFE600" />
+        </div>
+        <p className="text-[11px] text-[#00F0FF] font-black uppercase tracking-widest mt-1">
+          {language === 'fa' ? '✨ ماجراجویی با موفقیت به پایان رسید! ✨' : '✨ CHAMPIONS OF THE PARTY! ✨'}
         </p>
       </div>
       
-      {/* Winning details card, double bordered in winner's team accent color */}
+      {/* Winning details card */}
       {!isTie && winners.length === 1 ? (
         <div 
-          className="w-full bg-white p-5 rounded-2xl border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden"
+          className="w-full bg-white p-5 rounded-3xl border-[3.5px] border-[#160430] shadow-[5px_5px_0px_0px_#160430] relative overflow-hidden"
           style={{ borderColor: config.hex }}
         >
           {/* Winner mascot sidemount */}
-          <div className="absolute -right-2 top-0 opacity-15">
+          <div className="absolute -right-2 top-0 opacity-20">
             <TeamMascot color={winnerColor} size={100} animate={false} />
           </div>
 
-          <div className={`text-2xl font-black uppercase mb-3 ${config.text} bg-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] py-2.5 px-4 rounded-xl border-2 border-black inline-block`}>
-            {t.teamNames[winnerColor]}
+          <div 
+            className={`text-xl font-black uppercase mb-3 ${config.text} py-2 px-5 rounded-2xl border-2 border-[#160430] inline-flex items-center gap-2 shadow-[3px_3px_0px_0px_#160430]`}
+            style={{ backgroundColor: config.hex }}
+          >
+            <NeonCrown size={20} color="#160430" glow={false} />
+            <span>{t.teamNames[winnerColor]}</span>
           </div>
 
-          <div className="flex flex-col items-center gap-1.5 mt-2">
+          <div className="flex flex-col items-center gap-2 mt-2">
             {players.filter(p => p.teamId === winners[0].id).map(p => (
-              <span key={p.id} className="text-lg font-black text-slate-800 bg-slate-50 border-2 border-slate-200 px-4 py-1.5 rounded-lg w-10/12">
-                👑 {p.name}
+              <span key={p.id} className="text-base sm:text-lg font-black text-[#160430] bg-[#F8EFFF] border-2 border-[#160430] px-4 py-2 rounded-xl w-11/12 shadow-[2px_2px_0px_0px_#160430] flex items-center justify-center gap-2">
+                <NeonCrown size={16} color="#FFE600" glow={false} />
+                <span>{p.name}</span>
               </span>
             ))}
           </div>
         </div>
       ) : (
         /* TIED SCORE CARDS */
-        <div className="bg-white p-4 rounded-2xl border-4 border-black shadow-[6px_6px_0px_0px_#0] w-full space-y-4">
+        <div className="bg-white p-4 rounded-3xl border-[3.5px] border-[#160430] shadow-[5px_5px_0px_0px_#160430] w-full space-y-3">
           <div className="text-xs font-black text-slate-500 uppercase tracking-widest">{t.winners}</div>
           {winners.map(w => {
-            const configW = COLORS_MAP[w.color] || { bg: 'bg-indigo-600', text: 'text-white' };
+            const configW = COLORS_MAP[w.color] || { bg: 'bg-[#00F0FF]', text: 'text-[#160430]', hex: '#00F0FF' };
             return (
               <div 
                 key={w.id} 
-                className="p-3.5 rounded-xl border-4 border-black text-black font-bold flex items-center justify-between"
-                style={{ borderColor: configW.hex }}
+                className="p-3 rounded-2xl border-[2.5px] border-[#160430] text-[#160430] font-bold flex items-center justify-between shadow-[2px_2px_0px_0px_#160430]"
+                style={{ borderLeftWidth: '6px', borderLeftColor: configW.hex }}
               >
                 <div className="flex items-center gap-2">
-                  <TeamMascot color={w.color} size={30} animate={false} />
-                  <span className="font-black truncate">{labelWinnerNames(w.id)}</span>
+                  <TeamMascot color={w.color} size={32} animate={false} />
+                  <span className="font-black truncate text-sm">{labelWinnerNames(w.id)}</span>
                 </div>
-                <span className="text-[10.5px] bg-[#39ff14] border border-black px-2 py-0.5 rounded font-bold">MUTUAL SCORE</span>
+                <span className="text-[10px] bg-[#39FF14] text-[#160430] border border-[#160430] px-2 py-0.5 rounded-lg font-black">
+                  MUTUAL SCORE
+                </span>
               </div>
             );
           })}
         </div>
       )}
 
-      {/* Celebrating animated mascot blob */}
-      <div className="my-5 flex flex-col items-center">
+      {/* Celebrating animated mascot */}
+      <div className="my-3 flex flex-col items-center">
         <TeamMascot color="PARTY" size={80} className="animate-party-float" />
-        <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mt-1">
-          {language === 'fa' ? '🎈 تبریک به قهرمانان!' : '🎉 GG WP! PARTY TIME!'}
+        <span className="text-[11px] text-[#160430] uppercase font-black tracking-widest mt-1 bg-white px-3 py-1 rounded-full border-2 border-[#160430] shadow-[2px_2px_0px_0px_#160430]">
+          {language === 'fa' ? '🎈 تبریک به قهرمانان دورهمی!' : '🎉 GG WP! PARTY TIME!'}
         </span>
       </div>
 
@@ -115,18 +128,14 @@ const EndGameScreen: React.FC<Props> = ({ winners, players, onRestart, language,
           sound.playClick();
           onRestart();
         }}
-        className="pixel-btn pixel-btn-pink w-full py-4 text-lg font-black uppercase tracking-wider"
+        className="pixel-btn pixel-btn-pink w-full py-4 text-base font-black uppercase tracking-wider text-white flex items-center justify-center gap-2"
       >
-        🔄 {t.returnMenu}
+        <span>🔄 {t.returnMenu}</span>
+        <NeonLightning size={20} color="#FFE600" />
       </button>
 
     </div>
   );
-
-  // Helper routine to format winner names
-  function labelWinnerNames(teamId: number): string {
-    return players.filter(p => p.teamId === teamId).map(p => p.name).join(' & ');
-  }
 };
 
 export default EndGameScreen;

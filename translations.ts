@@ -318,6 +318,20 @@ export const TRANSLATIONS: Record<Language, any> = {
     back: "Terug",
     next: "Volgende",
     categories_title: "Categorieën",
+    difficulty_title: "Moeilijkheidsgraad",
+    difficulty_hint: "Kies enkele woorden, samenstellingen of spreekwoorden",
+    difficultyLevels: {
+      easy: "Makkelijk",
+      medium: "Gemiddeld",
+      hard: "Moeilijk",
+      all: "Gemengd (Alles)"
+    },
+    difficultyDescs: {
+      easy: "Enkele woorden (Glas, Koelkast, Leeuw...)",
+      medium: "Samengestelde 2-woord termen (Verkeerspolitie, Mountainbike...)",
+      hard: "3+ Woorden en spreekwoorden (Wie een kuil graaft...)",
+      all: "Gevarieerde mix van alle moeilijkheidsgraden"
+    },
     wordsFinished: "Geselecteerde woorden zijn op",
     categories: {
       CAT_OBJECTS: "Dagelijkse Objecten",
@@ -444,6 +458,20 @@ export const TRANSLATIONS: Record<Language, any> = {
     back: "Zurück",
     next: "Weiter",
     categories_title: "Kategorien",
+    difficulty_title: "Wort-Schwierigkeitsgrad",
+    difficulty_hint: "Einzelwörter, zusammengesetzte Begriffe oder Sprichwörter",
+    difficultyLevels: {
+      easy: "Einfach",
+      medium: "Mittel",
+      hard: "Schwer",
+      all: "Gemischt (Alle)"
+    },
+    difficultyDescs: {
+      easy: "Einzelne Wörter (Glas, Kühlschrank, Löwe...)",
+      medium: "Zusammengesetzte 2-Wort-Begriffe (Verkehrspolizei, Mountainbike...)",
+      hard: "3+ Wörter & Sprichwörter (Wer im Glashaus sitzt...)",
+      all: "Bunte Mischung aller Schwierigkeitsgrade"
+    },
     wordsFinished: "Ausgewählte Wörter sind beendet",
     categories: {
       CAT_OBJECTS: "Alltagsgegenstände",
@@ -466,8 +494,9 @@ export const TRANSLATIONS: Record<Language, any> = {
     round: "Runde",
     of: "von",
     timeRound: "Rundenzeit",
-    nextRound: "Start Next Round",
+    nextRound: "Nächste Runde",
     roundEnded: "Runde {n} beendet",
+    passPhone: "Telefon weitergeben",
     paused: "Pause",
     resume: "Verstanden",
     exit: "Beenden",
@@ -569,6 +598,20 @@ export const TRANSLATIONS: Record<Language, any> = {
     back: "Retour",
     next: "Suivant",
     categories_title: "Catégories",
+    difficulty_title: "Niveau de difficulté",
+    difficulty_hint: "Mots simples, termes composés ou proverbes",
+    difficultyLevels: {
+      easy: "Facile",
+      medium: "Moyen",
+      hard: "Difficile",
+      all: "Mixte (Tous)"
+    },
+    difficultyDescs: {
+      easy: "Mots simples (Verre, Frigo, Lion, Voiture...)",
+      medium: "Termes composés de 2 mots (Machine à laver, Vélo tout-terrain...)",
+      hard: "3+ mots & proverbes (Pierre qui roule n'amasse pas mousse...)",
+      all: "Mélange équilibré de tous les niveaux"
+    },
     wordsFinished: "Les mots sélectionnés sont terminés",
     categories: {
       CAT_OBJECTS: "Objets Quotidiens",
@@ -695,6 +738,20 @@ export const TRANSLATIONS: Record<Language, any> = {
     back: "رجوع",
     next: "التالي",
     categories_title: "الفئات",
+    difficulty_title: "مستوى صعوبة الكلمات",
+    difficulty_hint: "كلمات مفردة، مصطلحات مركبة أو أمثال شعبية",
+    difficultyLevels: {
+      easy: "سهل",
+      medium: "متوسط",
+      hard: "صعب",
+      all: "متنوع (الكل)"
+    },
+    difficultyDescs: {
+      easy: "كلمات مفردة (كوب، ثلاجة، أسد، سيارة...)",
+      medium: "مصطلحات مركبة من كلمتين (شرطة المرور، دراجة جبلية...)",
+      hard: "عبارات ۳+ كلمات وأمثال شعبية (عصفور في اليد...)",
+      all: "مزيج متوازن وعشوائي من كافة المستويات"
+    },
     wordsFinished: "انتهت الكلمات المختارة",
     categories: {
       CAT_OBJECTS: "الأشياء اليومية",
@@ -821,6 +878,20 @@ export const TRANSLATIONS: Record<Language, any> = {
     back: "Geri",
     next: "İleri",
     categories_title: "Kategoriler",
+    difficulty_title: "Kelime Zorluk Derecesi",
+    difficulty_hint: "Tek kelimeler, bileşik terimler veya atasözleri",
+    difficultyLevels: {
+      easy: "Kolay",
+      medium: "Orta",
+      hard: "Zor",
+      all: "Karışık (Hepsi)"
+    },
+    difficultyDescs: {
+      easy: "Tek kelimeler (Bardak, Buzdolabı, Aslan...)",
+      medium: "2 kelimeli birleşik ifadeler (Trafik polisi, Dağ bisikleti...)",
+      hard: "3+ kelimeli ifadeler ve atasözleri (Damlaya damlaya göl olur...)",
+      all: "Tüm zorluk seviyelerinden dengeli karışım"
+    },
     wordsFinished: "Seçili kelimeler bitti",
     categories: {
       CAT_OBJECTS: "Günlük Nesneler",
@@ -947,6 +1018,20 @@ export const TRANSLATIONS: Record<Language, any> = {
     back: "Wstecz",
     next: "Dalej",
     categories_title: "Kategorie",
+    difficulty_title: "Poziom trudności haseł",
+    difficulty_hint: "Pojedyncze słowa, wyrażenia dwuczłonowe lub przysłowia",
+    difficultyLevels: {
+      easy: "Łatwy",
+      medium: "Średni",
+      hard: "Trudny",
+      all: "Mieszany (Wszystko)"
+    },
+    difficultyDescs: {
+      easy: "Pojedyncze słowa (Szklanka, Lodówka, Lew...)",
+      medium: "Wyrażenia 2-wyrazowe (Policja drogowa, Rower górski...)",
+      hard: "3+ wyrazów i przysłowia (Kto rano wstaje...)",
+      all: "Różnorodna mieszanka wszystkich poziomów"
+    },
     wordsFinished: "Wybrane słowa skończyлися",
     categories: {
       CAT_OBJECTS: "Codzienne Przedmioty",
@@ -1073,6 +1158,20 @@ export const TRANSLATIONS: Record<Language, any> = {
     back: "Назад",
     next: "Далі",
     categories_title: "Категорії",
+    difficulty_title: "Рівень складності слів",
+    difficulty_hint: "Окремі слова, складені терміни або приказки",
+    difficultyLevels: {
+      easy: "Легкий",
+      medium: "Середній",
+      hard: "Складний",
+      all: "Змішаний (Усі)"
+    },
+    difficultyDescs: {
+      easy: "Окремі слова (Склянка, Холодильник, Лев...)",
+      medium: "Складені терміни з 2 слів (Дорожня поліція, Гірський велосипед...)",
+      hard: "3+ слів та приказки (Сім разів відміряй...)",
+      all: "Різноманітний мікс усіх рівнів складності"
+    },
     wordsFinished: "Вибрані слова закінчилися",
     categories: {
       CAT_OBJECTS: "Предмети",

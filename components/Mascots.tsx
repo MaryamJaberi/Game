@@ -8,242 +8,194 @@ interface MascotProps {
   animate?: boolean;
 }
 
-export const TeamMascot: React.FC<MascotProps> = ({ color = TeamColor.Blue, className = '', size = 64, animate = true }: MascotProps) => {
+export const TeamMascot: React.FC<MascotProps> = ({ color = TeamColor.Blue, className = '', size = 72, animate = true }: MascotProps) => {
   const isPartyAnimate = animate ? 'animate-party-float' : '';
 
   switch (color) {
     case TeamColor.Blue:
-      /* BLUE TEAM: Nervous Blue Whale */
+      /* BLUE TEAM: Glowing Neon Cyan Aquatic Buddy (Image 2 Neon Style) */
       return (
         <svg 
           width={size} 
           height={size} 
           viewBox="0 0 100 100" 
-          className={`${isPartyAnimate} ${className}`}
-          style={{ imageRendering: 'pixelated' }}
+          className={`${isPartyAnimate} ${className} drop-shadow-[0_0_8px_rgba(0,240,255,0.75)]`}
         >
-          {/* Water Spout */}
-          <path d="M48,15 Q50,6 45,3 Q52,9 50,15" fill="none" stroke="#43D9FF" strokeWidth="3" strokeLinecap="round" />
-          <path d="M52,15 Q55,7 60,4 Q54,10 52,15" fill="none" stroke="#43D9FF" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="44" cy="3" r="2" fill="#43D9FF" />
-          <circle cx="61" cy="4" r="2" fill="#43D9FF" />
+          {/* Water Spout Neon Fountain */}
+          <path d="M48,16 Q50,4 40,4 Q48,10 48,16" fill="none" stroke="#00F0FF" strokeWidth="3" strokeLinecap="round" />
+          <path d="M52,16 Q54,4 62,4 Q54,10 52,16" fill="none" stroke="#00F0FF" strokeWidth="3" strokeLinecap="round" />
+          <circle cx="40" cy="4" r="2" fill="#FFE600" stroke="#FFE600" />
+          <circle cx="62" cy="4" r="2" fill="#FFE600" stroke="#FFE600" />
 
-          {/* Whale Body */}
-          <path 
-            d="M16,55 C16,32 35,22 62,22 C78,22 86,30 86,45 C86,60 76,75 55,75 C30,75 16,70 16,55 Z" 
-            fill="#4AA8FF" 
-            stroke="#181425" 
-            strokeWidth="4" 
-          />
-          {/* Whale Belly */}
-          <path 
-            d="M26,62 C34,70 54,72 68,64 C64,72 50,75 35,74 C28,73 25,68 26,62 Z" 
-            fill="#BEE3FF" 
-            stroke="#181425" 
-            strokeWidth="2.5" 
-          />
-          {/* Tail Fin */}
-          <path d="M16,52 L6,42 Q4,50 9,56 L5,64 Q12,62 18,58 Z" fill="#4AA8FF" stroke="#181425" strokeWidth="3.5" />
-          {/* Side Flipper */}
-          <path d="M48,56 C44,66 38,68 34,64 C32,60 38,54 44,53 Z" fill="#3290EA" stroke="#181425" strokeWidth="3" />
+          {/* Neon Tube Round Body */}
+          <circle cx="50" cy="54" r="33" fill="#001830" stroke="#00F0FF" strokeWidth="4" />
+          {/* Inner Glowing Tube Belly */}
+          <ellipse cx="50" cy="64" rx="20" ry="12" fill="none" stroke="#38BDF8" strokeWidth="2.5" strokeDasharray="4 2" />
 
-          {/* Nervous Big Eyes */}
-          <circle cx="58" cy="40" r="7" fill="#FFFFFF" stroke="#181425" strokeWidth="3" />
-          <circle cx="57" cy="40" r="3" fill="#181425" />
-          <circle cx="55" cy="38" r="1.5" fill="#FFFFFF" />
+          {/* Glowing Neon Flippers */}
+          <path d="M17,54 Q10,58 18,66" fill="none" stroke="#00F0FF" strokeWidth="3.5" strokeLinecap="round" />
+          <path d="M83,54 Q90,58 82,66" fill="none" stroke="#00F0FF" strokeWidth="3.5" strokeLinecap="round" />
 
-          <circle cx="74" cy="40" r="7" fill="#FFFFFF" stroke="#181425" strokeWidth="3" />
-          <circle cx="73" cy="40" r="3" fill="#181425" />
-          <circle cx="71" cy="38" r="1.5" fill="#FFFFFF" />
+          {/* Radiant Neon Eyes */}
+          <circle cx="38" cy="46" r="6" fill="#00F0FF" />
+          <circle cx="36" cy="44" r="2" fill="#FFFFFF" />
+          <circle cx="62" cy="46" r="6" fill="#00F0FF" />
+          <circle cx="60" cy="44" r="2" fill="#FFFFFF" />
 
-          {/* Nervous Squiggle Eyebrows */}
-          <path d="M53,30 Q58,33 63,30" fill="none" stroke="#181425" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M69,30 Q74,33 79,30" fill="none" stroke="#181425" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Neon Pink Cheeks */}
+          <ellipse cx="28" cy="54" rx="4" ry="2.5" fill="#FF007F" stroke="#FF007F" />
+          <ellipse cx="72" cy="54" rx="4" ry="2.5" fill="#FF007F" stroke="#FF007F" />
 
-          {/* Nervous Wavy Mouth */}
-          <path d="M62,54 Q67,50 72,55 Q77,50 82,54" fill="none" stroke="#181425" strokeWidth="3" strokeLinecap="round" />
-
-          {/* Cute Sweatdrop */}
-          <path d="M84,32 Q88,24 90,32 A3,3 0 0,1 84,32" fill="#43D9FF" stroke="#181425" strokeWidth="1.5" />
-          {/* Rosy Cheeks */}
-          <ellipse cx="50" cy="48" rx="4" ry="2.5" fill="#FF6B6B" opacity="0.6" />
-          <ellipse cx="82" cy="48" rx="4" ry="2.5" fill="#FF6B6B" opacity="0.6" />
+          {/* Cute Neon Open Smile */}
+          <path d="M44,54 Q50,62 56,54" fill="none" stroke="#FFE600" strokeWidth="3" strokeLinecap="round" />
         </svg>
       );
 
     case TeamColor.Red:
-      /* RED TEAM: Hyper Red Mushroom */
+      /* RED TEAM: Glowing Neon Hot Pink-Red Flame Monster */
       return (
         <svg 
           width={size} 
           height={size} 
           viewBox="0 0 100 100" 
-          className={`${isPartyAnimate} ${className}`}
-          style={{ imageRendering: 'pixelated' }}
+          className={`${isPartyAnimate} ${className} drop-shadow-[0_0_8px_rgba(255,16,88,0.75)]`}
         >
-          {/* Mushroom Stem */}
-          <path d="M36,54 C34,74 38,82 50,82 C62,82 66,74 64,54 Z" fill="#FFF5E6" stroke="#181425" strokeWidth="4" />
-          
-          {/* Mushroom Cap */}
-          <path 
-            d="M12,56 C12,28 30,16 50,16 C70,16 88,28 88,56 C88,60 12,60 12,56 Z" 
-            fill="#FF6363" 
-            stroke="#181425" 
-            strokeWidth="4" 
-          />
-          {/* Cap Underbelly Rim */}
-          <ellipse cx="50" cy="56" rx="38" ry="6" fill="#E64444" stroke="#181425" strokeWidth="3" />
+          {/* Glowing Neon Flame Antenna */}
+          <path d="M38,22 C32,8 42,4 46,12 C50,4 58,8 52,22 Z" fill="#FFE60022" stroke="#FFE600" strokeWidth="3" strokeLinejoin="round" />
 
-          {/* White Polka Dots */}
-          <circle cx="50" cy="28" r="8" fill="#FFFFFF" stroke="#181425" strokeWidth="2.5" />
-          <circle cx="28" cy="40" r="6" fill="#FFFFFF" stroke="#181425" strokeWidth="2.5" />
-          <circle cx="72" cy="40" r="6" fill="#FFFFFF" stroke="#181425" strokeWidth="2.5" />
-          <circle cx="50" cy="46" r="4.5" fill="#FFFFFF" stroke="#181425" strokeWidth="2" />
+          {/* Neon Tube Red Body */}
+          <circle cx="50" cy="54" r="33" fill="#2D0014" stroke="#FF1058" strokeWidth="4" />
 
-          {/* Hyper Slanted Eyes */}
-          <path d="M38,62 L48,65" stroke="#181425" strokeWidth="3.5" strokeLinecap="round" />
-          <circle cx="44" cy="67" r="4" fill="#181425" />
-          <circle cx="43" cy="65" r="1.5" fill="#FFFFFF" />
+          {/* Glowing Little Feet */}
+          <ellipse cx="36" cy="85" rx="6" ry="4" fill="none" stroke="#FF1058" strokeWidth="3" />
+          <ellipse cx="64" cy="85" rx="6" ry="4" fill="none" stroke="#FF1058" strokeWidth="3" />
 
-          <path d="M62,62 L52,65" stroke="#181425" strokeWidth="3.5" strokeLinecap="round" />
-          <circle cx="56" cy="67" r="4" fill="#181425" />
-          <circle cx="55" cy="65" r="1.5" fill="#FFFFFF" />
+          {/* Glowing Expressive Neon Eyes */}
+          <ellipse cx="38" cy="46" rx="7" ry="8" fill="#FFFFFF" stroke="#FF1058" strokeWidth="2.5" />
+          <circle cx="39" cy="46" r="4" fill="#FF1058" />
+          <circle cx="37" cy="44" r="1.5" fill="#FFFFFF" />
 
-          {/* Hyper Open Mouth with Tongue */}
-          <path d="M44,74 C44,80 56,80 56,74 Z" fill="#181425" />
-          <path d="M47,77 C48,79 52,79 53,77 Z" fill="#FFD447" />
+          <ellipse cx="62" cy="46" rx="7" ry="8" fill="#FFFFFF" stroke="#FF1058" strokeWidth="2.5" />
+          <circle cx="61" cy="46" r="4" fill="#FF1058" />
+          <circle cx="59" cy="44" r="1.5" fill="#FFFFFF" />
 
-          {/* Tiny Cute Arms */}
-          <path d="M32,66 L24,60" stroke="#181425" strokeWidth="3.5" strokeLinecap="round" />
-          <path d="M68,66 L76,60" stroke="#181425" strokeWidth="3.5" strokeLinecap="round" />
+          {/* Playful Cheerful Brows */}
+          <path d="M30,34 Q38,36 44,32" fill="none" stroke="#FFE600" strokeWidth="3" strokeLinecap="round" />
+          <path d="M70,34 Q62,36 56,32" fill="none" stroke="#FFE600" strokeWidth="3" strokeLinecap="round" />
+
+          {/* Glowing Wide Smile with Tongue */}
+          <path d="M42,56 Q50,68 58,56" fill="#2D0014" stroke="#FFE600" strokeWidth="3" strokeLinecap="round" />
+          <circle cx="50" cy="61" r="2.5" fill="#FF1058" />
+
+          {/* Neon Yellow Cheeks */}
+          <circle cx="28" cy="54" r="3.5" fill="#FFE600" />
+          <circle cx="72" cy="54" r="3.5" fill="#FFE600" />
         </svg>
       );
 
     case TeamColor.Green:
-      /* GREEN TEAM: Happy Green Frog */
+      /* GREEN TEAM: Glowing Neon Emerald/Lime Froggy */
       return (
         <svg 
           width={size} 
           height={size} 
           viewBox="0 0 100 100" 
-          className={`${isPartyAnimate} ${className}`}
-          style={{ imageRendering: 'pixelated' }}
+          className={`${isPartyAnimate} ${className} drop-shadow-[0_0_8px_rgba(57,255,20,0.75)]`}
         >
-          {/* Big Frog Eyes Spheres */}
-          <circle cx="30" cy="32" r="15" fill="#6CFF7D" stroke="#181425" strokeWidth="4" />
-          <circle cx="70" cy="32" r="15" fill="#6CFF7D" stroke="#181425" strokeWidth="4" />
+          {/* Glowing Top Eyeball Arcs */}
+          <circle cx="32" cy="30" r="13" fill="#00240D" stroke="#39FF14" strokeWidth="3.5" />
+          <circle cx="68" cy="30" r="13" fill="#00240D" stroke="#39FF14" strokeWidth="3.5" />
 
-          {/* Frog Head/Body */}
-          <ellipse cx="50" cy="58" rx="38" ry="26" fill="#6CFF7D" stroke="#181425" strokeWidth="4" />
-          {/* Light Green Belly */}
-          <ellipse cx="50" cy="66" rx="22" ry="14" fill="#B9FFC1" stroke="#181425" strokeWidth="2.5" />
+          {/* Glowing Neon Pupils */}
+          <circle cx="32" cy="30" r="7" fill="#39FF14" />
+          <circle cx="30" cy="28" r="2.5" fill="#FFFFFF" />
+          <circle cx="68" cy="30" r="7" fill="#39FF14" />
+          <circle cx="66" cy="28" r="2.5" fill="#FFFFFF" />
 
-          {/* Eye Pupils */}
-          <circle cx="30" cy="32" r="9" fill="#FFFFFF" stroke="#181425" strokeWidth="2.5" />
-          <circle cx="31" cy="32" r="4.5" fill="#181425" />
-          <circle cx="29" cy="30" r="1.8" fill="#FFFFFF" />
+          {/* Frog Body Tube */}
+          <ellipse cx="50" cy="56" rx="35" ry="25" fill="#00240D" stroke="#39FF14" strokeWidth="4" />
+          {/* Inner Light Belly Arc */}
+          <ellipse cx="50" cy="63" rx="20" ry="12" fill="none" stroke="#00F0FF" strokeWidth="2.5" strokeDasharray="3 3" />
 
-          <circle cx="70" cy="32" r="9" fill="#FFFFFF" stroke="#181425" strokeWidth="2.5" />
-          <circle cx="69" cy="32" r="4.5" fill="#181425" />
-          <circle cx="67" cy="30" r="1.8" fill="#FFFFFF" />
+          {/* Super Happy Wide Neon Smile */}
+          <path d="M28,52 Q50,74 72,52" fill="none" stroke="#39FF14" strokeWidth="3.5" strokeLinecap="round" />
 
-          {/* Cheerful Frog Cheeks */}
-          <ellipse cx="24" cy="56" rx="5" ry="3" fill="#FF6B6B" opacity="0.6" />
-          <ellipse cx="76" cy="56" rx="5" ry="3" fill="#FF6B6B" opacity="0.6" />
+          {/* Neon Pink Cheeks */}
+          <ellipse cx="26" cy="52" rx="4.5" ry="3" fill="#FF007F" stroke="#FF007F" />
+          <ellipse cx="74" cy="52" rx="4.5" ry="3" fill="#FF007F" stroke="#FF007F" />
 
-          {/* Huge Happy Frog Smile */}
-          <path d="M25,52 Q50,75 75,52" fill="none" stroke="#181425" strokeWidth="4" strokeLinecap="round" />
-          
-          {/* Frog Nostril Dots */}
-          <circle cx="46" cy="46" r="1.5" fill="#181425" />
-          <circle cx="54" cy="46" r="1.5" fill="#181425" />
-
-          {/* Tiny Leaf Crown on head */}
-          <path d="M50,22 C46,12 50,8 50,8 C50,8 54,12 50,22 Z" fill="#9CFF57" stroke="#181425" strokeWidth="2" />
+          {/* Glowing Leaf on Head */}
+          <path d="M50,18 C44,10 50,4 50,4 C50,4 56,10 50,18 Z" fill="#FFE600" stroke="#FFE600" strokeWidth="2" />
         </svg>
       );
 
     case TeamColor.Yellow:
-      /* YELLOW TEAM: Chill Yellow Banana */
+      /* YELLOW TEAM: Glowing Neon Golden-Yellow Star Creature */
       return (
         <svg 
           width={size} 
           height={size} 
           viewBox="0 0 100 100" 
-          className={`${isPartyAnimate} ${className}`}
-          style={{ imageRendering: 'pixelated' }}
+          className={`${isPartyAnimate} ${className} drop-shadow-[0_0_8px_rgba(255,230,0,0.75)]`}
         >
-          {/* Banana Stem Top */}
-          <path d="M68,14 L74,18 L68,26 L62,22 Z" fill="#8FA31E" stroke="#181425" strokeWidth="3" />
-          
-          {/* Banana Curved Body */}
-          <path 
-            d="M68,20 C82,45 76,75 42,88 C32,92 24,88 20,84 C26,80 34,70 42,54 C50,38 58,24 68,20 Z" 
-            fill="#FFD447" 
-            stroke="#181425" 
-            strokeWidth="4" 
-          />
-          {/* Banana Bottom Tip */}
-          <circle cx="21" cy="85" r="3" fill="#6B4B1B" stroke="#181425" strokeWidth="1.5" />
+          {/* Glowing Crown / Head Spike */}
+          <path d="M46,20 C42,10 48,6 50,12 C52,6 58,10 54,20 Z" fill="#FFE60022" stroke="#FFE600" strokeWidth="3" />
 
-          {/* Banana Inner Highlight */}
-          <path 
-            d="M62,28 C72,48 68,70 42,80" 
-            fill="none" 
-            stroke="#FFF2A3" 
-            strokeWidth="3.5" 
-            strokeLinecap="round" 
-          />
+          {/* Glowing Neon Star Body */}
+          <circle cx="50" cy="54" r="33" fill="#2B2000" stroke="#FFE600" strokeWidth="4" />
 
-          {/* Cool Sunglasses for Chill Banana */}
-          <g transform="translate(40, 38) rotate(15)">
-            <rect x="0" y="0" width="16" height="10" rx="3" fill="#181425" stroke="#181425" strokeWidth="2" />
-            <rect x="18" y="0" width="16" height="10" rx="3" fill="#181425" stroke="#181425" strokeWidth="2" />
-            <line x1="14" y1="4" x2="20" y2="4" stroke="#181425" strokeWidth="3" />
-            {/* White Reflection Bars */}
-            <line x1="3" y1="2" x2="10" y2="8" stroke="#FFFFFF" strokeWidth="1.5" />
-            <line x1="21" y1="2" x2="28" y2="8" stroke="#FFFFFF" strokeWidth="1.5" />
-          </g>
+          {/* Glowing Tiny Neon Wings */}
+          <path d="M18,54 Q10,48 16,62" fill="none" stroke="#FFE600" strokeWidth="3" strokeLinecap="round" />
+          <path d="M82,54 Q90,48 84,62" fill="none" stroke="#FFE600" strokeWidth="3" strokeLinecap="round" />
 
-          {/* Smug / Chill Smile */}
-          <path d="M48,58 Q55,64 62,56" fill="none" stroke="#181425" strokeWidth="3" strokeLinecap="round" />
-          {/* Chill Thumbs Up Arm */}
-          <path d="M38,58 Q30,58 26,52 Q28,48 32,50" fill="none" stroke="#181425" strokeWidth="3" strokeLinecap="round" />
+          {/* Big Kawaii Neon Sparkle Eyes */}
+          <circle cx="38" cy="46" r="6" fill="#FFE600" />
+          <circle cx="36" cy="44" r="2" fill="#FFFFFF" />
+          <circle cx="62" cy="46" r="6" fill="#FFE600" />
+          <circle cx="60" cy="44" r="2" fill="#FFFFFF" />
+
+          {/* Neon Cyan Cheeks */}
+          <circle cx="28" cy="54" r="3.5" fill="#00F0FF" />
+          <circle cx="72" cy="54" r="3.5" fill="#00F0FF" />
+
+          {/* Cute Glowing Neon Beak / Smile */}
+          <polygon points="46,52 54,52 50,58" fill="#FF7A00" stroke="#FF7A00" strokeWidth="2" />
         </svg>
       );
 
     case 'PARTY':
-      /* MEGA PARTY MASCOT - Vibrant Neon Cyber Creature */
+      /* MEGA PARTY NEON MASCOT (Image 2 ICONIC Neon Stories Style) */
       return (
         <svg 
           width={size} 
           height={size} 
           viewBox="0 0 120 120" 
-          className={`${isPartyAnimate} ${className}`}
-          style={{ imageRendering: 'pixelated' }}
+          className={`${isPartyAnimate} ${className} drop-shadow-[0_0_12px_rgba(255,0,127,0.85)]`}
         >
-          {/* Party Cone Hat */}
-          <polygon points="60,6 44,40 76,40" fill="#FFD447" stroke="#181425" strokeWidth="4" />
-          <circle cx="60" cy="6" r="5" fill="#FF007F" stroke="#181425" strokeWidth="2.5" />
-          <line x1="48" y1="28" x2="72" y2="28" stroke="#FF007F" strokeWidth="3" />
-          <line x1="53" y1="18" x2="67" y2="18" stroke="#43D9FF" strokeWidth="3" />
+          {/* Party Cone Hat Glowing Tubes */}
+          <polygon points="60,6 40,44 80,44" fill="#200028" stroke="#FFE600" strokeWidth="3.5" strokeLinejoin="round" />
+          <circle cx="60" cy="6" r="5" fill="#FF007F" stroke="#FF007F" className="drop-shadow-[0_0_6px_#FF007F]" />
+          <line x1="46" y1="32" x2="74" y2="32" stroke="#FF007F" strokeWidth="3" strokeLinecap="round" />
+          <line x1="51" y1="20" x2="69" y2="20" stroke="#00F0FF" strokeWidth="3" strokeLinecap="round" />
 
-          {/* Main Neon Pink Body */}
-          <path d="M25,85 C25,55 40,40 60,40 C80,40 95,55 95,85 C95,100 87,105 60,105 C33,105 25,100 25,85 Z" fill="#FF007F" stroke="#181425" strokeWidth="4" />
-          <path d="M32,92 C42,101 78,101 88,92 C86,98 75,101 60,101 C45,101 34,98 32,92 Z" fill="#C3005D" />
+          {/* Main Glowing Neon Magenta Body */}
+          <circle cx="60" cy="74" r="37" fill="#1C002B" stroke="#FF007F" strokeWidth="4" />
 
-          {/* Neon Visor Glasses */}
-          <rect x="35" y="52" width="50" height="15" rx="5" fill="#181425" stroke="#FFD447" strokeWidth="4" />
-          <line x1="40" y1="58" x2="52" y2="58" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
-          <line x1="57" y1="58" x2="70" y2="58" stroke="#43D9FF" strokeWidth="3" strokeLinecap="round" />
-          
-          {/* Big Smile with Lime Tongue */}
-          <path d="M45,74 C45,86 75,86 75,74 Z" fill="#181425" stroke="#181425" strokeWidth="2" />
-          <path d="M52,80 C54,82 66,82 68,80 Z" fill="#9CFF57" />
-          <polygon points="49,74 52,77 55,74" fill="#FFFFFF" />
-          <polygon points="65,74 68,77 71,74" fill="#FFFFFF" />
+          {/* Futuristic Glowing Neon Visor / Glasses */}
+          <rect x="34" y="58" width="52" height="18" rx="8" fill="#001830" stroke="#00F0FF" strokeWidth="3.5" className="drop-shadow-[0_0_6px_#00F0FF]" />
+          {/* Visor Neon Glare Lines */}
+          <line x1="40" y1="65" x2="52" y2="65" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
+          <line x1="58" y1="65" x2="76" y2="65" stroke="#FFE600" strokeWidth="3" strokeLinecap="round" />
+
+          {/* Luminous Neon Smile */}
+          <path d="M48,84 Q60,96 72,84" fill="none" stroke="#39FF14" strokeWidth="3.5" strokeLinecap="round" className="drop-shadow-[0_0_6px_#39FF14]" />
+
+          {/* Neon Floating Sparkles around mascot */}
+          <circle cx="16" cy="40" r="3" fill="#FFE600" className="drop-shadow-[0_0_4px_#FFE600]" />
+          <circle cx="104" cy="45" r="3" fill="#00F0FF" className="drop-shadow-[0_0_4px_#00F0FF]" />
+          <circle cx="18" cy="85" r="2.5" fill="#39FF14" className="drop-shadow-[0_0_4px_#39FF14]" />
+          <circle cx="102" cy="90" r="3" fill="#FFE600" className="drop-shadow-[0_0_4px_#FFE600]" />
         </svg>
       );
   }
 };
-

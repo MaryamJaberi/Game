@@ -1,212 +1,287 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@500;700;800&family=Vazirmatn:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@500;700;800;900&family=Vazirmatn:wght@400;600;700;800;900&display=swap');
 
-/* Apply Vazirmatn for Persian/Arabic, Space Grotesk/Press Start 2P for Latin/retro parts */
+/* Mobile view & cross-browser base adjustments */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   font-family: 'Vazirmatn', 'Space Grotesk', system-ui, -apple-system, sans-serif;
-  background-color: #130a2a; /* Outer dark arcade background */
+  background: radial-gradient(circle at 50% 15%, #2d0658 0%, #170430 65%, #0e0220 100%);
+  color: #160430;
   overflow-x: hidden;
-  color: #1a1a2e;
 }
 
-/* Retro arcade scrollbar */
+/* Retro modern scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #1a0f3d;
+  background: #170430;
 }
 ::-webkit-scrollbar-thumb {
   background: #ff007f;
-  border-radius: 4px;
+  border-radius: 9999px;
 }
 
-/* Pixel Checkered Grid background */
+/* High-Energy Party & Co SHOCK YOU! Memphis Canvas (Image 1 & Image 2) */
 .bg-pixel-grid {
-  background-color: #dbd5f5;
+  background-color: #fcf9ff;
   background-image: 
-    linear-gradient(rgba(192, 183, 234, 0.45) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(192, 183, 234, 0.45) 2px, transparent 2px),
-    linear-gradient(rgba(192, 183, 234, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(192, 183, 234, 0.2) 1px, transparent 1px);
-  background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px;
-  background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+    radial-gradient(#d8b4fe 1.5px, transparent 1.5px),
+    linear-gradient(rgba(216, 180, 254, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(216, 180, 254, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px, 12px 12px, 12px 12px;
+  background-position: 0 0, 0 0, 0 0;
+  position: relative;
 }
 
-/* Chunky Pixel Fonts */
+/* Chunky Pixel & Display Fonts */
 .font-pixel {
   font-family: 'Press Start 2P', monospace;
   line-height: 1.5;
 }
 .font-display {
   font-family: 'Space Grotesk', 'Vazirmatn', sans-serif;
-  font-weight: 800;
+  font-weight: 900;
 }
 
-/* Exact 3D Pixel Border Helpers */
-.pixel-border-black {
-  border: 4px solid #000000;
-  box-shadow: 4px 4px 0px 0px #000000;
+/* Neon Glow Utility Filters (Image 2) */
+.neon-glow-pink {
+  filter: drop-shadow(0 0 8px rgba(255, 0, 127, 0.85));
+}
+.neon-glow-cyan {
+  filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.85));
+}
+.neon-glow-yellow {
+  filter: drop-shadow(0 0 8px rgba(255, 230, 0, 0.85));
+}
+.neon-glow-lime {
+  filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.85));
+}
+.neon-glow-purple {
+  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.85));
 }
 
-/* Pixel Card / Panel */
+/* Memphis Party & Co SHOCK YOU! 3D Cards */
 .pixel-card {
   background: #ffffff;
-  border: 4px solid #000000;
-  box-shadow: 5px 5px 0px 0px #000000;
-  border-radius: 12px;
+  border: 3.5px solid #160430;
+  box-shadow: 4px 4px 0px 0px #160430;
+  border-radius: 20px;
   position: relative;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pixel-card-shock {
+  background: #ffffff;
+  border: 3.5px solid #160430;
+  box-shadow: 4px 4px 0px 0px #ffe600, 8px 8px 0px 0px #ff007f, 11px 11px 0px 0px #160430;
+  border-radius: 22px;
 }
 
 .pixel-card-neon {
   background: #ffffff;
-  border: 4px solid #000000;
-  box-shadow: 6px 6px 0px 0px #ff007f, 10px 10px 0px 0px #000000;
-  border-radius: 16px;
+  border: 3.5px solid #160430;
+  box-shadow: 4px 4px 0px 0px #00f0ff, 8px 8px 0px 0px #ff007f, 11px 11px 0px 0px #160430;
+  border-radius: 22px;
 }
 
-/* Pixel Buttons with 3D blocky inset rims and shadows */
+/* Party & Co Tactile 3D Buttons */
 .pixel-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  border: 4px solid #000000;
-  border-radius: 12px;
-  font-weight: 800;
+  border: 3.5px solid #160430;
+  border-radius: 16px;
+  font-weight: 900;
   text-transform: uppercase;
-  transition: all 0.1s ease;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
-  box-shadow: 0px 4px 0px 0px rgba(0, 0, 0, 1), 4px 8px 0px 0px rgba(0, 0, 0, 1);
-  top: -4px;
+  box-shadow: 0px 4px 0px 0px #160430, 3px 6px 0px 0px #160430;
+  transform: translateY(-3px);
+  touch-action: manipulation;
 }
 
 .pixel-btn:active {
-  top: 1px;
-  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 1), 1px 2px 0px 0px rgba(0, 0, 0, 1);
+  transform: translateY(2px);
+  box-shadow: 0px 1px 0px 0px #160430, 1px 2px 0px 0px #160430;
 }
 
 .pixel-btn:disabled, .pixel-btn.disabled {
-  opacity: 0.6;
-  background-color: #94a3b8 !important;
-  color: #475569 !important;
-  box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 1), 2px 4px 0px 0px rgba(0, 0, 0, 1) !important;
-  top: -2px;
+  opacity: 0.55;
+  background-color: #cbd5e1 !important;
+  color: #64748b !important;
+  border-color: #475569 !important;
+  box-shadow: 0px 2px 0px 0px #475569, 2px 4px 0px 0px #475569 !important;
+  transform: translateY(-1px);
   cursor: not-allowed;
 }
 
-/* Specific colors based on reference sheet buttons */
+/* Party & Co SHOCK YOU! Button Themes (Image 1) */
 .pixel-btn-pink {
-  background-color: #ff007f;
+  background: linear-gradient(180deg, #ff1493 0%, #ff007f 40%, #d8006b 100%);
   color: #ffffff;
-  text-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+  text-shadow: 1px 1px 0px rgba(0,0,0,0.4);
 }
 .pixel-btn-pink::after {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 2px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 4px;
-}
-
-.pixel-btn-cyan {
-  background-color: #00d2ff;
-  color: #000000;
-}
-.pixel-btn-cyan::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 2px;
+  top: 3px;
+  left: 6px;
+  right: 6px;
   height: 4px;
   background: rgba(255, 255, 255, 0.45);
-  border-radius: 4px;
-}
-
-.pixel-btn-lime {
-  background-color: #39ff14;
-  color: #000000;
-}
-.pixel-btn-lime::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 2px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
+  border-radius: 9999px;
 }
 
 .pixel-btn-yellow {
-  background-color: #ffd200;
-  color: #000000;
+  background: linear-gradient(180deg, #fff033 0%, #ffe600 50%, #f5b700 100%);
+  color: #160430;
+  text-shadow: 0px 1px 0px rgba(255,255,255,0.6);
 }
 .pixel-btn-yellow::after {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 2px;
+  top: 3px;
+  left: 6px;
+  right: 6px;
   height: 4px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 9999px;
+}
+
+.pixel-btn-cyan {
+  background: linear-gradient(180deg, #4de8ff 0%, #00f0ff 50%, #00b4d8 100%);
+  color: #160430;
+  text-shadow: 0px 1px 0px rgba(255,255,255,0.6);
+}
+.pixel-btn-cyan::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  right: 6px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 9999px;
+}
+
+.pixel-btn-lime {
+  background: linear-gradient(180deg, #5eff3b 0%, #39ff14 50%, #15c400 100%);
+  color: #160430;
+  text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
+}
+.pixel-btn-lime::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  right: 6px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 9999px;
 }
 
 .pixel-btn-purple {
-  background-color: #8b5cf6;
+  background: linear-gradient(180deg, #9d4edd 0%, #7b2cbf 50%, #5a189a 100%);
   color: #ffffff;
-  text-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+  text-shadow: 1px 1px 0px rgba(0,0,0,0.4);
 }
 .pixel-btn-purple::after {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 2px;
+  top: 3px;
+  left: 6px;
+  right: 6px;
   height: 4px;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 9999px;
 }
 
 .pixel-btn-dark {
-  background-color: #241442;
-  color: #ffffff;
+  background: linear-gradient(180deg, #2d0658 0%, #160430 100%);
+  color: #ffe600;
+  text-shadow: 0px 1px 2px rgba(0,0,0,0.6);
+}
+.pixel-btn-dark::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  right: 6px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
 }
 
-/* Custom RTL-friendly adjustments for pixel double borders */
+/* Custom RTL-friendly adjustments for pixel shadows */
 [dir="rtl"] .pixel-card {
-  box-shadow: -5px 5px 0px 0px #000000;
+  box-shadow: -4px 4px 0px 0px #160430;
+}
+[dir="rtl"] .pixel-card-shock {
+  box-shadow: -4px 4px 0px 0px #ffe600, -8px 8px 0px 0px #ff007f, -11px 11px 0px 0px #160430;
 }
 [dir="rtl"] .pixel-card-neon {
-  box-shadow: -6px 6px 0px 0px #ff007f, -10px 10px 0px 0px #000000;
+  box-shadow: -4px 4px 0px 0px #00f0ff, -8px 8px 0px 0px #ff007f, -11px 11px 0px 0px #160430;
 }
 [dir="rtl"] .pixel-btn {
-  box-shadow: 0px 4px 0px 0px rgba(0, 0, 0, 1), -4px 8px 0px 0px rgba(0, 0, 0, 1);
+  box-shadow: 0px 4px 0px 0px #160430, -3px 6px 0px 0px #160430;
 }
 [dir="rtl"] .pixel-btn:active {
-  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 1), -1px 2px 0px 0px rgba(0, 0, 0, 1);
+  box-shadow: 0px 1px 0px 0px #160430, -1px 2px 0px 0px #160430;
 }
 
-/* Floating Confetti Particle animations */
+/* Fun Animations */
 @keyframes party-float {
   0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(3deg); }
+  50% { transform: translateY(-7px) rotate(2.5deg); }
   100% { transform: translateY(0) rotate(0deg); }
 }
 .animate-party-float {
   animation: party-float 3s ease-in-out infinite;
 }
 
-@keyframes wiggle {
-  0%, 100% { transform: rotate(-3deg); }
-  50% { transform: rotate(3deg); }
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 0, 127, 0.7)); }
+  50% { filter: drop-shadow(0 0 14px rgba(255, 230, 0, 0.9)); }
 }
-.animate-wiggle {
-  animation: wiggle 0.5s ease-in-out infinite;
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes pop-bounce {
+  0% { transform: scale(0.85); opacity: 0; }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-pop-bounce {
+  animation: pop-bounce 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes float-up-fade {
+  0% { transform: translateY(0) scale(0.8); opacity: 1; }
+  100% { transform: translateY(-45px) scale(1.15); opacity: 0; }
+}
+.animate-float-up {
+  animation: float-up-fade 0.8s ease-out forwards;
+}
+
+/* Safe area padding utilities for iOS notches and home bars */
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }

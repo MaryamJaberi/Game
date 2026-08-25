@@ -252,7 +252,10 @@ const App: React.FC = () => {
   const isRTL = settings.language === 'fa' || settings.language === 'ar';
 
   return (
-    <div className="min-h-screen max-w-md mx-auto bg-pixel-grid relative flex flex-col overflow-hidden md:my-6 md:min-h-[94vh] border-[6px] border-black shadow-[12px_12px_0px_0px_#000000] rounded-[32px]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div 
+      className="h-[100dvh] min-h-[100dvh] md:h-auto md:min-h-[880px] md:max-h-[95vh] md:my-4 max-w-md mx-auto bg-pixel-grid relative flex flex-col overflow-hidden border-0 md:border-[5px] md:border-[#241c48] shadow-2xl md:shadow-[8px_8px_0px_0px_#241c48] rounded-none md:rounded-[28px] pt-safe pb-safe"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* 1. SPLASH / INTRO */}
       {currentScreen === 'INTRO' && (
         <IntroScreen 

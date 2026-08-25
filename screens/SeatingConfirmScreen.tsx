@@ -3,6 +3,7 @@ import { GameSettings, Team, Player, TeamColor } from '../types';
 import { COLORS_MAP } from '../constants';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
+import { NeonLightning, NeonBook, NeonSparkle } from '../components/NeonIcons';
 import { sound } from '../soundManager';
 
 interface Props {
@@ -30,12 +31,12 @@ const SeatingConfirmScreen: React.FC<Props> = ({
   const teamCount = settings.playerCount / 2;
 
   return (
-    <div className="flex-1 flex flex-col p-5 select-none overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex-1 flex flex-col p-4 sm:p-5 select-none overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header Bar */}
-      <div className="flex items-center justify-between mb-3 bg-black text-white p-3 border-4 border-black rounded-xl shadow-[4px_4px_0px_0px_#43D9FF]">
+      <div className="flex items-center justify-between mb-2 bg-gradient-to-r from-[#7B2CBF] via-[#FF007F] to-[#FF2E93] text-white p-3.5 border-[3.5px] border-[#160430] rounded-2xl shadow-[4px_4px_0px_0px_#160430]">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🪑</span>
-          <h2 className="text-base font-bold uppercase tracking-wider">
+          <NeonLightning size={22} color="#FFE600" />
+          <h2 className="text-base md:text-lg font-black uppercase tracking-wider">
             {settings.language === 'fa' ? 'چیدمان دور میز' : 'Table Seating Guide'}
           </h2>
         </div>
@@ -44,31 +45,35 @@ const SeatingConfirmScreen: React.FC<Props> = ({
             sound.playClick();
             onOpenHelp();
           }} 
-          className="px-3 py-1 bg-[#43D9FF] text-black border-2 border-black font-bold text-xs rounded hover:bg-cyan-300 transition-colors"
+          className="px-3 py-1 bg-[#FFE600] hover:bg-yellow-300 text-[#160430] border-2 border-[#160430] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#160430] transition-colors flex items-center gap-1"
         >
-          {t.guide}
+          <NeonBook size={14} color="#160430" glow={false} />
+          <span>{t.guide}</span>
         </button>
       </div>
 
       {/* Seating Tip */}
-      <div className="text-[11px] font-bold text-slate-800 bg-white/90 p-2.5 border-2 border-black rounded-xl text-center mb-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]">
-        {settings.language === 'fa' 
-          ? '🎯 هم‌تیمی‌ها دقیقاً روبروی هم می‌نشینند! چرخش بازی ساعت‌گرد است.' 
-          : '🎯 Teammates sit directly opposite each other! Rotation is clockwise.'}
+      <div className="text-[11px] font-black text-[#160430] bg-white p-2 border-2 border-[#160430] rounded-xl text-center mb-2 shadow-[2px_2px_0px_0px_#160430] flex items-center justify-center gap-1.5">
+        <NeonSparkle size={14} color="#00F0FF" />
+        <span>
+          {settings.language === 'fa' 
+            ? '🎯 هم‌تیمی‌ها دقیقاً روبروی هم می‌نشینند! چرخش نوبت ساعت‌گرد است.' 
+            : '🎯 Teammates sit directly opposite each other! Rotation is clockwise.'}
+        </span>
       </div>
 
       {/* Interactive Seating Circle SVG */}
-      <div className="relative w-72 h-72 mx-auto select-none bg-white p-2 border-4 border-black rounded-3xl shadow-[4px_4px_0px_0px_#000000] my-auto flex items-center justify-center">
-        <svg width="280" height="280" viewBox="0 0 280 280" className="mx-auto">
+      <div className="relative w-64 h-64 sm:w-72 sm:h-72 mx-auto select-none bg-white p-2 border-[3.5px] border-[#160430] rounded-3xl shadow-[4px_4px_0px_0px_#160430] my-auto flex items-center justify-center">
+        <svg width="260" height="260" viewBox="0 0 280 280" className="mx-auto">
           {/* Table Center */}
-          <circle cx={centerX} cy={centerY} r="45" fill="#241B3D" stroke="#181425" strokeWidth="4" />
-          <circle cx={centerX} cy={centerY} r="40" fill="#17142C" />
+          <circle cx={centerX} cy={centerY} r="45" fill="#160430" stroke="#FF007F" strokeWidth="3" />
+          <circle cx={centerX} cy={centerY} r="39" fill="#240A42" />
           <text 
             x={centerX} 
             y={centerY + 4} 
             textAnchor="middle" 
-            fill="#FFD447" 
-            className="text-[11px] font-black font-display uppercase tracking-widest"
+            fill="#FFE600" 
+            className="text-[10px] font-black uppercase tracking-widest"
           >
             TABLE
           </text>
@@ -79,10 +84,10 @@ const SeatingConfirmScreen: React.FC<Props> = ({
             cy={centerY} 
             r={radius} 
             fill="none" 
-            stroke="#181425" 
+            stroke="#160430" 
             strokeWidth="3" 
             strokeDasharray="6,6" 
-            className="opacity-50"
+            className="opacity-30"
           />
 
           {/* Opposite Partner Lines */}
@@ -94,7 +99,7 @@ const SeatingConfirmScreen: React.FC<Props> = ({
             const x2 = centerX + radius * Math.cos(angle2);
             const y2 = centerY + radius * Math.sin(angle2);
             const team = teams[i];
-            const colorConfig = team ? COLORS_MAP[team.color] : { hex: '#4AA8FF' };
+            const colorConfig = team ? COLORS_MAP[team.color] : { hex: '#00F0FF' };
 
             return (
               <line 
@@ -104,9 +109,9 @@ const SeatingConfirmScreen: React.FC<Props> = ({
                 x2={x2} 
                 y2={y2} 
                 stroke={colorConfig.hex} 
-                strokeWidth="3.5" 
+                strokeWidth="3" 
                 strokeDasharray="4,4"
-                className="opacity-75"
+                className="opacity-80"
               />
             );
           })}
@@ -116,7 +121,7 @@ const SeatingConfirmScreen: React.FC<Props> = ({
             const angle = (i * 360 / players.length - 90) * (Math.PI / 180);
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
-            const config = COLORS_MAP[p.teamColor] || { hex: '#4AA8FF' };
+            const config = COLORS_MAP[p.teamColor] || { hex: '#00F0FF' };
 
             return (
               <g key={p.id}>
@@ -124,9 +129,9 @@ const SeatingConfirmScreen: React.FC<Props> = ({
                 <circle 
                   cx={x} 
                   cy={y} 
-                  r="22" 
+                  r="23" 
                   fill={config.hex} 
-                  stroke="#181425" 
+                  stroke="#160430" 
                   strokeWidth="3.5" 
                   className="shadow-md"
                 />
@@ -135,8 +140,8 @@ const SeatingConfirmScreen: React.FC<Props> = ({
                   x={x} 
                   y={y - 2} 
                   textAnchor="middle" 
-                  fill="#181425" 
-                  className="text-[10px] font-black"
+                  fill="#160430" 
+                  className="text-[10.5px] font-black"
                 >
                   P{i + 1}
                 </text>
@@ -145,7 +150,7 @@ const SeatingConfirmScreen: React.FC<Props> = ({
                   x={x} 
                   y={y + 11} 
                   textAnchor="middle" 
-                  fill="#181425" 
+                  fill="#160430" 
                   className="text-[9px] font-black"
                   style={{ fontFamily: 'Vazirmatn, sans-serif' }}
                 >
@@ -165,16 +170,16 @@ const SeatingConfirmScreen: React.FC<Props> = ({
           return (
             <div 
               key={team.id}
-              className="bg-white p-2 rounded-xl border-3 border-black flex items-center gap-2 shadow-[2px_2px_0px_0px_#000000]"
-              style={{ borderColor: config.hex }}
+              className="bg-white p-2 rounded-xl border-[2.5px] border-[#160430] flex items-center gap-2 shadow-[2px_2px_0px_0px_#160430]"
+              style={{ borderLeftWidth: '5px', borderLeftColor: config.hex }}
             >
-              <TeamMascot color={team.color} size={30} animate={false} />
+              <TeamMascot color={team.color} size={28} animate={false} />
               <div className="min-w-0 flex-1">
                 <div className="text-[9px] font-black text-slate-500 uppercase truncate">
                   {t.teamNames[team.color]}
                 </div>
-                <div className="text-[10px] font-black text-slate-800 truncate">
-                  {teamPlayers.map(p => p.name).join(' ⚔️ ')}
+                <div className="text-[10.5px] font-black text-[#160430] truncate">
+                  {teamPlayers.map(p => p.name).join(' ⚡ ')}
                 </div>
               </div>
             </div>
@@ -183,13 +188,13 @@ const SeatingConfirmScreen: React.FC<Props> = ({
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-3 mt-2">
+      <div className="flex gap-3 mt-1">
         <button 
           onClick={() => {
             sound.playClick();
             onBack();
           }} 
-          className="pixel-btn pixel-btn-dark flex-1 py-3 text-sm font-bold uppercase tracking-wider"
+          className="pixel-btn pixel-btn-dark flex-1 py-3.5 text-sm font-black uppercase tracking-wider"
         >
           {t.back}
         </button>
@@ -198,9 +203,10 @@ const SeatingConfirmScreen: React.FC<Props> = ({
             sound.playStartGame();
             onConfirm();
           }} 
-          className="pixel-btn pixel-btn-lime flex-[2] py-3 text-base font-black uppercase tracking-wider text-black"
+          className="pixel-btn pixel-btn-lime flex-[2] py-3.5 text-base font-black uppercase tracking-wider text-[#160430] flex items-center justify-center gap-2"
         >
-          🚀 {settings.language === 'fa' ? 'شروع بازی' : 'Start Round 1'}
+          <span>{settings.language === 'fa' ? 'شروع دور ۱' : 'Start Round 1'}</span>
+          <NeonLightning size={20} color="#160430" glow={false} />
         </button>
       </div>
     </div>
