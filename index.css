@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@500;700;800&family=Vazirmatn:wght@400;700;900&display=swap');
+
+/* Apply Vazirmatn for Persian/Arabic, Space Grotesk/Press Start 2P for Latin/retro parts */
+body {
+  font-family: 'Vazirmatn', 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  background-color: #130a2a; /* Outer dark arcade background */
+  overflow-x: hidden;
+  color: #1a1a2e;
+}
+
+/* Retro arcade scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1a0f3d;
+}
+::-webkit-scrollbar-thumb {
+  background: #ff007f;
+  border-radius: 4px;
+}
+
+/* Pixel Checkered Grid background */
+.bg-pixel-grid {
+  background-color: #dbd5f5;
+  background-image: 
+    linear-gradient(rgba(192, 183, 234, 0.45) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(192, 183, 234, 0.45) 2px, transparent 2px),
+    linear-gradient(rgba(192, 183, 234, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(192, 183, 234, 0.2) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px;
+  background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+}
+
+/* Chunky Pixel Fonts */
+.font-pixel {
+  font-family: 'Press Start 2P', monospace;
+  line-height: 1.5;
+}
+.font-display {
+  font-family: 'Space Grotesk', 'Vazirmatn', sans-serif;
+  font-weight: 800;
+}
+
+/* Exact 3D Pixel Border Helpers */
+.pixel-border-black {
+  border: 4px solid #000000;
+  box-shadow: 4px 4px 0px 0px #000000;
+}
+
+/* Pixel Card / Panel */
+.pixel-card {
+  background: #ffffff;
+  border: 4px solid #000000;
+  box-shadow: 5px 5px 0px 0px #000000;
+  border-radius: 12px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.pixel-card-neon {
+  background: #ffffff;
+  border: 4px solid #000000;
+  box-shadow: 6px 6px 0px 0px #ff007f, 10px 10px 0px 0px #000000;
+  border-radius: 16px;
+}
+
+/* Pixel Buttons with 3D blocky inset rims and shadows */
+.pixel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 4px solid #000000;
+  border-radius: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition: all 0.1s ease;
+  user-select: none;
+  cursor: pointer;
+  box-shadow: 0px 4px 0px 0px rgba(0, 0, 0, 1), 4px 8px 0px 0px rgba(0, 0, 0, 1);
+  top: -4px;
+}
+
+.pixel-btn:active {
+  top: 1px;
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 1), 1px 2px 0px 0px rgba(0, 0, 0, 1);
+}
+
+.pixel-btn:disabled, .pixel-btn.disabled {
+  opacity: 0.6;
+  background-color: #94a3b8 !important;
+  color: #475569 !important;
+  box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 1), 2px 4px 0px 0px rgba(0, 0, 0, 1) !important;
+  top: -2px;
+  cursor: not-allowed;
+}
+
+/* Specific colors based on reference sheet buttons */
+.pixel-btn-pink {
+  background-color: #ff007f;
+  color: #ffffff;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+}
+.pixel-btn-pink::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+}
+
+.pixel-btn-cyan {
+  background-color: #00d2ff;
+  color: #000000;
+}
+.pixel-btn-cyan::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 4px;
+}
+
+.pixel-btn-lime {
+  background-color: #39ff14;
+  color: #000000;
+}
+.pixel-btn-lime::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+
+.pixel-btn-yellow {
+  background-color: #ffd200;
+  color: #000000;
+}
+.pixel-btn-yellow::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+
+.pixel-btn-purple {
+  background-color: #8b5cf6;
+  color: #ffffff;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+}
+.pixel-btn-purple::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+}
+
+.pixel-btn-dark {
+  background-color: #241442;
+  color: #ffffff;
+}
+
+/* Custom RTL-friendly adjustments for pixel double borders */
+[dir="rtl"] .pixel-card {
+  box-shadow: -5px 5px 0px 0px #000000;
+}
+[dir="rtl"] .pixel-card-neon {
+  box-shadow: -6px 6px 0px 0px #ff007f, -10px 10px 0px 0px #000000;
+}
+[dir="rtl"] .pixel-btn {
+  box-shadow: 0px 4px 0px 0px rgba(0, 0, 0, 1), -4px 8px 0px 0px rgba(0, 0, 0, 1);
+}
+[dir="rtl"] .pixel-btn:active {
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 1), -1px 2px 0px 0px rgba(0, 0, 0, 1);
+}
+
+/* Floating Confetti Particle animations */
+@keyframes party-float {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+.animate-party-float {
+  animation: party-float 3s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out infinite;
+}

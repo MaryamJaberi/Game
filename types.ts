@@ -6,6 +6,8 @@ export enum TeamColor {
   Yellow = 'YELLOW'
 }
 
+export type Language = 'fa' | 'en' | 'nl' | 'de' | 'fr' | 'ar' | 'tr' | 'pl' | 'uk';
+
 export interface Player {
   id: number;
   name: string;
@@ -16,7 +18,7 @@ export interface Player {
 export interface Team {
   id: number;
   color: TeamColor;
-  timeRemaining: number; // milliseconds
+  timeRemaining: number;
   isEliminated: boolean;
   playerIds: number[];
 }
@@ -24,9 +26,10 @@ export interface Team {
 export interface GameSettings {
   playerCount: 4 | 6 | 8;
   roundsCount: number;
-  roundDuration: number; // seconds
+  roundDuration: number;
   selectedCategories: string[];
   playerNames: string[];
+  language: Language;
 }
 
 export interface GameHistoryEntry {
@@ -35,14 +38,25 @@ export interface GameHistoryEntry {
   players: string[];
   winnerColor: TeamColor | 'TIE';
   winnerNames: string[];
+  language: Language;
 }
 
 export enum GameStatus {
+  Splash = 'SPLASH',
   Setup = 'SETUP',
-  RoundStarting = 'ROUND_STARTING',
-  Playing = 'PLAYING',
+  SeatingConfirm = 'SEATING_CONFIRM',
+  ActiveTurn = 'ACTIVE_TURN',
+  PassPhone = 'PASS_PHONE',
   Paused = 'PAUSED',
-  Help = 'HELP',
-  RoundFinished = 'ROUND_FINISHED',
-  GameOver = 'GAME_OVER'
+  RoundEnded = 'ROUND_ENDED',
+  TeamEliminated = 'TEAM_ELIMINATED',
+  WordExhaustion = 'WORD_EXHAUSTION',
+  GameEnded = 'GAME_ENDED',
+  WinnerScreen = 'WINNER_SCREEN',
+  // Backward-compatibility aliases
+  RoundStarting = 'PASS_PHONE',
+  Playing = 'ACTIVE_TURN',
+  RoundFinished = 'ROUND_ENDED',
+  GameOver = 'WINNER_SCREEN',
+  Help = 'PAUSED'
 }

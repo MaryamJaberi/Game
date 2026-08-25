@@ -1,5 +1,8 @@
 {
-  "name": "دور (Turn)",
-  "description": "A Persian local multiplayer word-guessing game. Pass the phone, manage team time, and be the last team standing.",
-  "requestFramePermissions": []
+  "name": "دور (Turn) - DOUR Party Game",
+  "description": "A local pass-the-phone word-guessing party game with team pools, opposite seating, and modern HD pixel-art styling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

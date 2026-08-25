@@ -1,11 +1,12 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { GameSettings, GameStatus, GameHistoryEntry, Team, Player, TeamColor } from './types';
-import { CATEGORIES, COLORS_MAP } from './constants';
+import { COLORS_MAP } from './constants';
+import { WORD_BANK } from './words';
 import IntroScreen from './screens/IntroScreen';
 import SetupScreen from './screens/SetupScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import PlayerNameScreen from './screens/PlayerNameScreen';
+import SeatingConfirmScreen from './screens/SeatingConfirmScreen';
 import GameplayScreen from './screens/GameplayScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import HelpScreen from './screens/HelpScreen';
@@ -14,46 +15,52 @@ const DEFAULT_SETTINGS: GameSettings = {
   playerCount: 4,
   roundsCount: 3,
   roundDuration: 90,
-  selectedCategories: [Object.keys(CATEGORIES)[0]],
-  playerNames: Array(8).fill('')
+  selectedCategories: ["CAT_OBJECTS", "CAT_ANIMALS", "CAT_FOOD"],
+  playerNames: Array(8).fill(''),
+  language: 'fa'
 };
 
 const App: React.FC = () => {
-  // Navigation & UI State
-  const [currentScreen, setCurrentScreen] = useState<'INTRO' | 'SETUP' | 'CATEGORIES' | 'PLAYERS' | 'GAME' | 'HISTORY' | 'HELP'>('INTRO');
-  const [prevScreen, setPrevScreen] = useState<'INTRO' | 'SETUP' | 'CATEGORIES' | 'PLAYERS' | 'GAME' | 'HISTORY' | 'HELP'>('INTRO');
+  const [currentScreen, setCurrentScreen] = useState<'INTRO' | 'SETUP' | 'CATEGORIES' | 'PLAYERS' | 'SEATING_CONFIRM' | 'GAME' | 'HISTORY' | 'HELP'>('INTRO');
+  const [prevScreen, setPrevScreen] = useState<'INTRO' | 'SETUP' | 'CATEGORIES' | 'PLAYERS' | 'SEATING_CONFIRM' | 'GAME' | 'HISTORY' | 'HELP'>('INTRO');
   const [activeHelpSection, setActiveHelpSection] = useState<string>('intro');
   const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
   const [history, setHistory] = useState<GameHistoryEntry[]>([]);
 
-  // Core Gameplay State (LIFTED)
+  // Gameplay State (Strict 11 Status State Machine)
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.Setup);
   const [teams, setTeams] = useState<Team[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentRound, setCurrentRound] = useState(1);
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [roundTimer, setRoundTimer] = useState(0);
-  const [wordList, setWordList] = useState<string[]>([]);
+  
+  // SESSION WORD POOL: Shuffled once per match initialization
+  const [shuffledPool, setShuffledPool] = useState<number[]>([]);
+  const [poolPointer, setPoolPointer] = useState(0);
   const [currentWord, setCurrentWord] = useState('');
   const [swapCooldown, setSwapCooldown] = useState(20000);
-  const [usedWords, setUsedWords] = useState<Set<string>>(new Set());
+  const [isPoolExhausted, setIsPoolExhausted] = useState(false);
 
   const timerRef = useRef<number | null>(null);
 
-  // Persistence
   useEffect(() => {
     const savedSettings = localStorage.getItem('dor_settings');
     if (savedSettings) {
-      const parsed = JSON.parse(savedSettings);
-      setSettings({
-        ...DEFAULT_SETTINGS,
-        ...parsed,
-        playerNames: Array.isArray(parsed.playerNames) ? [...parsed.playerNames, ...Array(8).fill('')].slice(0, 8) : DEFAULT_SETTINGS.playerNames
-      });
+      try {
+        const parsed = JSON.parse(savedSettings);
+        setSettings(prev => ({ ...prev, ...parsed }));
+      } catch (e) {
+        // Fallback to default
+      }
     }
     const savedHistory = localStorage.getItem('dor_history');
     if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
+      try {
+        setHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        // Fallback
+      }
     }
   }, []);
 
@@ -62,29 +69,39 @@ const App: React.FC = () => {
     localStorage.setItem('dor_settings', JSON.stringify(newSettings));
   };
 
-  const navigateTo = (screen: typeof currentScreen) => {
-    setPrevScreen(currentScreen);
-    setCurrentScreen(screen);
-  };
+  /**
+   * Word Selection from single shuffled session pool
+   */
+  const getNextWord = useCallback(() => {
+    setPoolPointer(currentPtr => {
+      if (currentPtr >= shuffledPool.length) {
+        setIsPoolExhausted(true);
+        setGameStatus(GameStatus.WordExhaustion);
+        return currentPtr;
+      }
 
-  // Gameplay Logic Helpers
-  const getNextWord = useCallback((list: string[], used: Set<string>) => {
-    const available = list.filter(w => !used.has(w));
-    const pool = available.length > 0 ? available : list; // Fallback to full list if exhausted
-    const randomIndex = Math.floor(Math.random() * pool.length);
-    const word = pool[randomIndex];
-    
-    setCurrentWord(word);
-    setUsedWords(prev => new Set(prev).add(word));
-    setSwapCooldown(20000);
-  }, []);
+      const wordIdx = shuffledPool[currentPtr];
+      const wordData = WORD_BANK[wordIdx];
+      
+      if (wordData) {
+        setCurrentWord(wordData.words[settings.language] || wordData.words['en']);
+      }
+      
+      setSwapCooldown(20000);
+      return currentPtr + 1;
+    });
+  }, [shuffledPool, settings.language]);
 
-  const initializeGame = () => {
-    const teamColors = Object.values(TeamColor);
+  /**
+   * Prepares Teams, Seating, and Word Bank, then shows SEATING_CONFIRM
+   */
+  const prepareGameSeating = () => {
+    const teamColors = [TeamColor.Blue, TeamColor.Red, TeamColor.Green, TeamColor.Yellow];
     const teamCount = settings.playerCount / 2;
     const totalGameTime = settings.roundsCount * settings.roundDuration * 1000;
     const timePerTeam = totalGameTime / teamCount;
 
+    // Team 1: (P1, P_opposite), Team 2: (P2, P_opposite), etc.
     const initialTeams: Team[] = Array.from({ length: teamCount }).map((_, i) => ({
       id: i,
       color: teamColors[i],
@@ -93,126 +110,173 @@ const App: React.FC = () => {
       playerIds: [i, i + teamCount]
     }));
 
-    const initialPlayers: Player[] = Array.from({ length: settings.playerCount }).map((_, i) => ({
-      id: i,
-      name: settings.playerNames[i],
-      teamId: i % teamCount,
-      teamColor: teamColors[i % teamCount]
-    }));
+    const initialPlayers: Player[] = Array.from({ length: settings.playerCount }).map((_, i) => {
+      const teamId = i % teamCount;
+      const defaultName = settings.language === 'fa' ? `بازیکن ${i + 1}` : `Player ${i + 1}`;
+      return {
+        id: i,
+        name: settings.playerNames[i]?.trim() || defaultName,
+        teamId: teamId,
+        teamColor: teamColors[teamId]
+      };
+    });
 
-    const allWords: string[] = [];
-    settings.selectedCategories.forEach(cat => allWords.push(...CATEGORIES[cat]));
-
+    // 1. Calculate pool of all words in all selected categories
+    const relevantPoolIndices = WORD_BANK
+      .map((w, i) => settings.selectedCategories.includes(w.category) ? i : -1)
+      .filter(i => i !== -1);
+    
+    // 2. Shuffle once for the whole match
+    const sessionPool = [...relevantPoolIndices].sort(() => Math.random() - 0.5);
+    
+    setShuffledPool(sessionPool);
+    setPoolPointer(0);
+    setIsPoolExhausted(false);
+    
     setTeams(initialTeams);
     setPlayers(initialPlayers);
-    setWordList(allWords);
-    setUsedWords(new Set());
     setCurrentRound(1);
     setActivePlayerIndex(0);
     setRoundTimer(settings.roundDuration * 1000);
-    setGameStatus(GameStatus.RoundStarting);
-    navigateTo('GAME');
+
+    // Initial word peek
+    if (sessionPool.length > 0) {
+      const firstWordData = WORD_BANK[sessionPool[0]];
+      if (firstWordData) {
+        setCurrentWord(firstWordData.words[settings.language] || firstWordData.words['en']);
+      }
+      setPoolPointer(1);
+    }
+
+    setGameStatus(GameStatus.SeatingConfirm);
+    setCurrentScreen('SEATING_CONFIRM');
+  };
+
+  /**
+   * Start Round 1 after Seating Confirmation
+   */
+  const startConfirmedGame = () => {
+    setGameStatus(GameStatus.ActiveTurn);
+    setCurrentScreen('GAME');
   };
 
   const handleResume = () => {
-    // CRITICAL FIX: Resuming from any pause requires a new word and swap reset
-    getNextWord(wordList, usedWords);
-    setGameStatus(GameStatus.Playing);
+    getNextWord();
+    setGameStatus(prev => prev === GameStatus.WinnerScreen || prev === GameStatus.GameEnded ? prev : GameStatus.ActiveTurn);
   };
 
   const openHelp = (section: string) => {
     setActiveHelpSection(section);
-    if (currentScreen === 'GAME') {
-      setGameStatus(GameStatus.Help);
-    }
-    navigateTo('HELP');
+    if (currentScreen === 'GAME') setGameStatus(GameStatus.Paused);
+    setPrevScreen(currentScreen);
+    setCurrentScreen('HELP');
   };
 
   const closeHelp = () => {
+    setCurrentScreen(prevScreen);
     if (prevScreen === 'GAME') {
       handleResume();
     }
-    navigateTo(prevScreen);
   };
 
-  // Master Timer Loop
+  // High-precision Millisecond Timer loop for ACTIVE_TURN
   useEffect(() => {
-    if (gameStatus === GameStatus.Playing) {
+    if (gameStatus === GameStatus.ActiveTurn) {
       timerRef.current = window.setInterval(() => {
-        // Round Timer
+        // Decrement Round Timer
         setRoundTimer(prev => {
           if (prev <= 10) {
-            setGameStatus(GameStatus.RoundFinished);
+            setGameStatus(GameStatus.RoundEnded);
             return 0;
           }
           return prev - 10;
         });
 
-        // Team Timer
+        // Decrement Active Team Timer ONLY
         const activePlayer = players[activePlayerIndex];
         if (activePlayer) {
           setTeams(prev => prev.map(t => {
             if (t.id === activePlayer.teamId && !t.isEliminated) {
               const newTime = t.timeRemaining - 10;
-              if (newTime <= 0) {
-                // Team Elimination logic handled in GameplayScreen component via status checks or here
-                return { ...t, timeRemaining: 0 };
-              }
-              return { ...t, timeRemaining: newTime };
+              return { ...t, timeRemaining: Math.max(0, newTime) };
             }
             return t;
           }));
         }
 
-        // Swap Cooldown
+        // Decrement Swap Cooldown
         setSwapCooldown(prev => Math.max(0, prev - 10));
       }, 10);
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
     }
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+
+    return () => { 
+      if (timerRef.current) clearInterval(timerRef.current); 
+    };
   }, [gameStatus, players, activePlayerIndex]);
 
+  const isRTL = settings.language === 'fa' || settings.language === 'ar';
+
   return (
-    <div className="min-h-screen max-w-md mx-auto bg-slate-50 relative shadow-2xl flex flex-col overflow-hidden border-x border-slate-200">
+    <div className="min-h-screen max-w-md mx-auto bg-pixel-grid relative flex flex-col overflow-hidden md:my-6 md:min-h-[94vh] border-[6px] border-black shadow-[12px_12px_0px_0px_#000000] rounded-[32px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* 1. SPLASH / INTRO */}
       {currentScreen === 'INTRO' && (
         <IntroScreen 
-          onNext={() => navigateTo('SETUP')} 
-          onOpenHistory={() => navigateTo('HISTORY')} 
+          language={settings.language}
+          onLanguageChange={(l) => saveSettings({...settings, language: l})}
+          onNext={() => { setGameStatus(GameStatus.Setup); setCurrentScreen('SETUP'); }} 
+          onOpenHistory={() => setCurrentScreen('HISTORY')} 
           onOpenHelp={() => openHelp('rules')} 
         />
       )}
       
+      {/* 2. SETUP */}
       {currentScreen === 'SETUP' && (
         <SetupScreen 
           settings={settings} 
           onSave={saveSettings} 
-          onNext={() => navigateTo('CATEGORIES')} 
-          onBack={() => navigateTo('INTRO')}
+          onNext={() => setCurrentScreen('CATEGORIES')} 
+          onBack={() => { setGameStatus(GameStatus.Splash); setCurrentScreen('INTRO'); }}
           onOpenHelp={() => openHelp('setup')}
         />
       )}
 
+      {/* CATEGORIES */}
       {currentScreen === 'CATEGORIES' && (
         <CategoryScreen 
           settings={settings} 
           onSave={saveSettings} 
-          onNext={() => navigateTo('PLAYERS')} 
-          onBack={() => navigateTo('SETUP')}
+          onNext={() => setCurrentScreen('PLAYERS')} 
+          onBack={() => setCurrentScreen('SETUP')}
           onOpenHelp={() => openHelp('categories')}
         />
       )}
 
+      {/* PLAYERS */}
       {currentScreen === 'PLAYERS' && (
         <PlayerNameScreen 
           settings={settings} 
           onSave={saveSettings} 
-          onStart={initializeGame} 
-          onBack={() => navigateTo('CATEGORIES')}
+          onStart={prepareGameSeating} 
+          onBack={() => setCurrentScreen('CATEGORIES')}
           onOpenHelp={() => openHelp('players')}
         />
       )}
 
+      {/* 3. SEATING_CONFIRM */}
+      {currentScreen === 'SEATING_CONFIRM' && (
+        <SeatingConfirmScreen
+          settings={settings}
+          teams={teams}
+          players={players}
+          onConfirm={startConfirmedGame}
+          onBack={() => setCurrentScreen('PLAYERS')}
+          onOpenHelp={() => openHelp('seating')}
+        />
+      )}
+
+      {/* 4. ACTIVE GAMEPLAY (ACTIVE_TURN, PASS_PHONE, PAUSED, ROUND_ENDED, TEAM_ELIMINATED, WORD_EXHAUSTION, GAME_ENDED, WINNER_SCREEN) */}
       {currentScreen === 'GAME' && (
         <GameplayScreen 
           settings={settings}
@@ -228,28 +292,34 @@ const App: React.FC = () => {
           roundTimer={roundTimer}
           setRoundTimer={setRoundTimer}
           currentWord={currentWord}
+          setCurrentWord={setCurrentWord}
           swapCooldown={swapCooldown}
-          onGetNextWord={() => getNextWord(wordList, usedWords)}
+          onGetNextWord={getNextWord}
           onResume={handleResume}
+          isPoolExhausted={isPoolExhausted}
           onFinish={(entry) => {
             const updated = [entry, ...history].slice(0, 30);
             setHistory(updated);
             localStorage.setItem('dor_history', JSON.stringify(updated));
           }} 
-          onExit={() => { setGameStatus(GameStatus.Setup); navigateTo('INTRO'); }}
+          onExit={() => { setGameStatus(GameStatus.Setup); setCurrentScreen('INTRO'); }}
           onOpenHelp={() => openHelp('gameplay')}
         />
       )}
 
+      {/* MATCH HISTORY */}
       {currentScreen === 'HISTORY' && (
         <HistoryScreen 
+          language={settings.language}
           history={history} 
-          onBack={() => navigateTo('INTRO')} 
+          onBack={() => setCurrentScreen('INTRO')} 
         />
       )}
 
+      {/* RULES / HELP GUIDE */}
       {currentScreen === 'HELP' && (
         <HelpScreen 
+          language={settings.language}
           onClose={closeHelp} 
           initialSection={activeHelpSection}
         />
