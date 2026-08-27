@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { GameSettings, GameStatus, GameHistoryEntry, Team, Player, TeamColor } from './types';
-import { COLORS_MAP } from './constants';
 import { WORD_BANK } from './words';
 import IntroScreen from './screens/IntroScreen';
 import SetupScreen from './screens/SetupScreen';
@@ -11,6 +10,8 @@ import GameplayScreen from './screens/GameplayScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import HelpScreen from './screens/HelpScreen';
 import { sound } from './soundManager';
+import { auth, saveMatchToCloud, syncSettingsToCloud } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const DEFAULT_SETTINGS: GameSettings = {
   playerCount: 4,
@@ -31,7 +32,7 @@ const App: React.FC = () => {
   const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
   const [history, setHistory] = useState<GameHistoryEntry[]>([]);
 
-  // Gameplay State (Strict 11 Status State Machine)
+  // Gameplay State
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.Setup);
   const [teams, setTeams] = useState<Team[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
@@ -39,7 +40,7 @@ const App: React.FC = () => {
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [roundTimer, setRoundTimer] = useState(0);
   
-  // SESSION WORD POOL: Shuffled once per match initialization
+  // SESSION WORD POOL
   const [shuffledPool, setShuffledPool] = useState<number[]>([]);
   const [poolPointer, setPoolPointer] = useState(0);
   const [currentWord, setCurrentWord] = useState('');
@@ -56,7 +57,7 @@ const App: React.FC = () => {
         const parsed = JSON.parse(savedSettings);
         setSettings(prev => ({ ...prev, ...parsed }));
       } catch (e) {
-        // Fallback to default
+        // Fallback
       }
     }
     const savedHistory = localStorage.getItem('dor_history');
@@ -68,6 +69,15 @@ const App: React.FC = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        syncSettingsToCloud(user.uid, settings).catch(console.error);
+      }
+    });
+    return () => unsubscribe();
+  }, [settings]);
 
   useEffect(() => {
     const isSoundOn = settings.soundEnabled ?? true;
@@ -82,6 +92,9 @@ const App: React.FC = () => {
   const saveSettings = (newSettings: GameSettings) => {
     setSettings(newSettings);
     localStorage.setItem('dor_settings', JSON.stringify(newSettings));
+    if (auth.currentUser) {
+      syncSettingsToCloud(auth.currentUser.uid, newSettings).catch(console.error);
+    }
   };
 
   /**
@@ -137,7 +150,6 @@ const App: React.FC = () => {
       };
     });
 
-    // 1. Calculate pool of words filtered by selected categories AND chosen difficulty level
     const targetDifficulty = settings.difficulty || 'easy';
     let relevantPoolIndices = WORD_BANK
       .map((w, i) => {
@@ -147,18 +159,15 @@ const App: React.FC = () => {
       })
       .filter(i => i !== -1);
     
-    // Fallback: If no words match the combination, relax category constraint
     if (relevantPoolIndices.length === 0) {
       relevantPoolIndices = WORD_BANK
         .map((w, i) => (targetDifficulty === 'all' || w.difficulty === targetDifficulty ? i : -1))
         .filter(i => i !== -1);
     }
-    // Ultimate fallback: All words
     if (relevantPoolIndices.length === 0) {
       relevantPoolIndices = WORD_BANK.map((_, i) => i);
     }
     
-    // 2. Shuffle once for the whole match
     const sessionPool = [...relevantPoolIndices].sort(() => Math.random() - 0.5);
     
     setShuffledPool(sessionPool);
@@ -171,7 +180,6 @@ const App: React.FC = () => {
     setActivePlayerIndex(0);
     setRoundTimer(settings.roundDuration * 1000);
 
-    // Initial word peek
     if (sessionPool.length > 0) {
       const firstWordData = WORD_BANK[sessionPool[0]];
       if (firstWordData) {
@@ -212,11 +220,10 @@ const App: React.FC = () => {
     }
   };
 
-  // High-precision Millisecond Timer loop for ACTIVE_TURN
+  // Millisecond Timer loop for ACTIVE_TURN
   useEffect(() => {
     if (gameStatus === GameStatus.ActiveTurn) {
       timerRef.current = window.setInterval(() => {
-        // Decrement Round Timer
         setRoundTimer(prev => {
           if (prev <= 10) {
             setGameStatus(GameStatus.RoundEnded);
@@ -225,7 +232,6 @@ const App: React.FC = () => {
           return prev - 10;
         });
 
-        // Decrement Active Team Timer ONLY
         const activePlayer = players[activePlayerIndex];
         if (activePlayer) {
           setTeams(prev => prev.map(t => {
@@ -237,7 +243,6 @@ const App: React.FC = () => {
           }));
         }
 
-        // Decrement Swap Cooldown
         setSwapCooldown(prev => Math.max(0, prev - 10));
       }, 10);
     } else {
@@ -253,7 +258,7 @@ const App: React.FC = () => {
 
   return (
     <div 
-      className="h-[100dvh] min-h-[100dvh] md:h-auto md:min-h-[880px] md:max-h-[95vh] md:my-4 max-w-md mx-auto bg-pixel-grid relative flex flex-col overflow-hidden border-0 md:border-[5px] md:border-[#241c48] shadow-2xl md:shadow-[8px_8px_0px_0px_#241c48] rounded-none md:rounded-[28px] pt-safe pb-safe"
+      className="h-[100dvh] min-h-[100dvh] max-h-[100dvh] md:h-[880px] md:max-h-[92vh] md:my-auto max-w-md mx-auto bg-pixel-grid relative flex flex-col overflow-hidden border-0 md:border-[5px] md:border-[#241442] shadow-2xl md:shadow-[8px_8px_0px_0px_#241442] rounded-none md:rounded-[28px]"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* 1. SPLASH / INTRO */}
@@ -312,7 +317,7 @@ const App: React.FC = () => {
         />
       )}
 
-      {/* 4. ACTIVE GAMEPLAY (ACTIVE_TURN, PAUSED, ROUND_ENDED, TEAM_ELIMINATED, WORD_EXHAUSTION, GAME_ENDED, WINNER_SCREEN) */}
+      {/* 4. ACTIVE GAMEPLAY */}
       {currentScreen === 'GAME' && (
         <GameplayScreen 
           settings={settings}
@@ -339,6 +344,9 @@ const App: React.FC = () => {
             const updated = [entry, ...history].slice(0, 30);
             setHistory(updated);
             localStorage.setItem('dor_history', JSON.stringify(updated));
+            if (auth.currentUser) {
+              saveMatchToCloud(auth.currentUser.uid, entry).catch(console.error);
+            }
           }} 
           onExit={() => { setGameStatus(GameStatus.Setup); setCurrentScreen('INTRO'); }}
           onOpenHelp={() => openHelp('gameplay')}

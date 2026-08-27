@@ -3,7 +3,7 @@ import { TeamColor } from './types';
 export const COLORS_MAP: Record<TeamColor, { bg: string, text: string, hex: string, surface: string, border: string, glow: string }> = {
   [TeamColor.Blue]: { 
     bg: 'bg-[#00F0FF]', 
-    text: 'text-slate-950', 
+    text: 'text-[#1a0833]', 
     hex: '#00F0FF', 
     surface: '#001D3D', 
     border: '#00F0FF',
@@ -19,7 +19,7 @@ export const COLORS_MAP: Record<TeamColor, { bg: string, text: string, hex: stri
   },
   [TeamColor.Green]: { 
     bg: 'bg-[#39FF14]', 
-    text: 'text-slate-950', 
+    text: 'text-[#1a0833]', 
     hex: '#39FF14', 
     surface: '#002B11', 
     border: '#39FF14',
@@ -27,7 +27,7 @@ export const COLORS_MAP: Record<TeamColor, { bg: string, text: string, hex: stri
   },
   [TeamColor.Yellow]: { 
     bg: 'bg-[#FFE600]', 
-    text: 'text-slate-950', 
+    text: 'text-[#1a0833]', 
     hex: '#FFE600', 
     surface: '#332600', 
     border: '#FFE600',
@@ -35,15 +35,16 @@ export const COLORS_MAP: Record<TeamColor, { bg: string, text: string, hex: stri
   },
 };
 
-// High-Energy Party & Co SHOCK YOU! Color Palette (Image 1)
+// High-Energy Party & Co SHOCK YOU! Color Palette (Lightened 2 Shades)
 export const UI_COLORS = {
-  shockPink: '#FF007F',        // Hot Pink / Magenta (Box background & accents)
-  shockYellow: '#FFE600',      // Electric Yellow (Lightning & Shock badges)
-  shockCyan: '#00F0FF',        // Electric Turquoise / Sky (Zig-zags & titles)
-  shockPurple: '#7B2CBF',      // Electric Purple / Violet (Borders & accents)
-  deepIndigo: '#160430',       // Shock Deep Violet / Navy (Dark canvas & 3D shadows)
-  darkBorder: '#160430',       // Bold Border Color
-  neonLime: '#39FF14',         // Neon Lime Green (Success & Correct actions)
+  shockPink: '#FF007F',        // Hot Pink / Magenta
+  shockYellow: '#FFE600',      // Electric Yellow
+  shockCyan: '#00F0FF',        // Electric Turquoise / Sky
+  shockPurple: '#7B2CBF',      // Electric Purple / Violet
+  deepIndigo: '#241442',       // Lightened Navy / Indigo (2 shades lighter than pitch black)
+  cardBackground: '#311b59',   // Dark card background
+  darkBorder: '#241442',       // Bold Border Color
+  neonLime: '#39FF14',         // Neon Lime Green
   dangerRed: '#FF2A6D',        // Neon Danger Red
 };
 

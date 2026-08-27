@@ -3,8 +3,9 @@ import { GameSettings } from '../types';
 import { CATEGORIES } from '../constants';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
-import { NeonCategoryIcon, NeonBook, NeonLightning } from '../components/NeonIcons';
+import { NeonCategoryIcon } from '../components/NeonIcons';
 import { sound } from '../soundManager';
+import { Layers, HelpCircle, ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
 
 interface Props {
   settings: GameSettings;
@@ -32,12 +33,14 @@ const CategoryScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onO
   };
 
   return (
-    <div className="flex-1 flex flex-col p-4 sm:p-5 select-none overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="h-full min-h-0 flex-1 flex flex-col p-3.5 sm:p-4 select-none overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with Party & Co SHOCK YOU! gradient */}
-      <div className="flex items-center justify-between mb-3 bg-gradient-to-r from-[#7B2CBF] via-[#FF007F] to-[#FF2E93] text-white p-3.5 border-[3.5px] border-[#160430] rounded-2xl shadow-[4px_4px_0px_0px_#160430]">
+      <div className="flex items-center justify-between mb-2.5 bg-gradient-to-r from-[#7B2CBF] via-[#FF007F] to-[#FF2E93] text-white p-3 border-[3.5px] border-[#241442] rounded-2xl shadow-[4px_4px_0px_0px_#241442] shrink-0">
         <div className="flex items-center gap-2">
-          <NeonLightning size={22} color="#FFE600" />
-          <h2 className="text-base md:text-lg font-black uppercase tracking-wider">
+          <div className="w-8 h-8 rounded-xl bg-[#FFE600] border-2 border-[#241442] flex items-center justify-center text-[#1a0833] shadow-[1px_1px_0px_0px_#241442]">
+            <Layers size={18} color="#1a0833" />
+          </div>
+          <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">
             {t.categories_title || t.categories.CAT_TITLE || 'Categories'}
           </h2>
         </div>
@@ -46,21 +49,21 @@ const CategoryScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onO
             sound.playClick();
             onOpenHelp();
           }} 
-          className="px-3 py-1 bg-[#FFE600] hover:bg-yellow-300 text-[#160430] border-2 border-[#160430] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#160430] transition-colors flex items-center gap-1"
+          className="px-3 py-1.5 bg-[#FFE600] hover:bg-yellow-300 text-[#1a0833] border-2 border-[#241442] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#241442] transition-transform active:translate-y-0.5 flex items-center gap-1.5"
         >
-          <NeonBook size={14} color="#160430" glow={false} />
+          <HelpCircle size={15} color="#1a0833" />
           <span>{t.guide}</span>
         </button>
       </div>
 
       {/* High-Contrast Hint Pill */}
-      <p className="text-[#160430] text-[11px] font-black mb-3 bg-white p-2.5 border-2 border-[#160430] rounded-xl shadow-[2px_2px_0px_0px_#160430] text-center flex items-center justify-center gap-1.5">
-        <NeonLightning size={14} color="#FF007F" />
+      <p className="text-[#1a0833] text-[11px] font-black mb-2.5 bg-white p-2 border-2 border-[#241442] rounded-xl shadow-[2px_2px_0px_0px_#241442] text-center flex items-center justify-center gap-1.5 shrink-0">
+        <Sparkles size={14} color="#FF007F" />
         <span>{t.categoryHint}</span>
       </p>
 
-      {/* Categories Scrollable Container with Glowing Neon Outline Icons */}
-      <div className="flex-1 overflow-y-auto pr-1 space-y-2.5 pb-2">
+      {/* Categories Scrollable Container */}
+      <div className="min-h-0 flex-1 overflow-y-auto pr-1 space-y-2.5 pb-2 overscroll-contain">
         {Object.keys(CATEGORIES).map(catKey => {
           const isSelected = settings.selectedCategories.includes(catKey);
           const translatedName = t.categories[catKey] || catKey;
@@ -70,28 +73,25 @@ const CategoryScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onO
               key={catKey}
               type="button"
               onClick={() => toggleCategory(catKey)}
-              className={`w-full p-3 rounded-2xl border-[3.5px] border-[#160430] flex items-center justify-between transition-all ${
+              className={`w-full p-3 rounded-2xl border-[3.5px] border-[#241442] flex items-center justify-between transition-all ${
                 isSelected
-                ? 'bg-gradient-to-r from-[#FFF033] to-[#FFE600] text-[#160430] shadow-[4px_4px_0px_0px_#160430] -translate-x-0.5 -translate-y-0.5'
-                : 'bg-white text-[#160430] shadow-[2px_2px_0px_0px_#160430] hover:bg-[#F9F0FF]'
+                ? 'bg-gradient-to-r from-[#FFF033] to-[#FFE600] text-[#1a0833] shadow-[4px_4px_0px_0px_#241442] -translate-x-0.5 -translate-y-0.5'
+                : 'bg-white text-[#1a0833] shadow-[2px_2px_0px_0px_#241442] hover:bg-[#F9F0FF]'
               }`}
             >
               <div className="flex items-center gap-3">
-                {/* Glowing Neon Outline Icon (Image 2 style) */}
-                <div className={`p-1.5 rounded-xl border-2 border-[#160430] ${isSelected ? 'bg-[#160430]' : 'bg-[#160430]'}`}>
-                  <NeonCategoryIcon catKey={catKey} size={24} />
+                <div className={`p-2 rounded-xl border-2 border-[#241442] ${isSelected ? 'bg-[#241442]' : 'bg-[#241442]'}`}>
+                  <NeonCategoryIcon catKey={catKey} size={20} />
                 </div>
-                <span className="font-black text-sm uppercase">{translatedName}</span>
+                <span className="font-black text-sm uppercase text-[#1a0833]">{translatedName}</span>
               </div>
 
-              {/* High Voltage Shock Checkbox */}
-              <div className={`w-7 h-7 border-2 border-[#160430] flex items-center justify-center rounded-xl shadow-[1px_1px_0px_0px_#160430] ${
-                isSelected ? 'bg-[#160430]' : 'bg-white'
+              {/* High Contrast Checkbox */}
+              <div className={`w-7 h-7 border-2 border-[#241442] flex items-center justify-center rounded-xl shadow-[1px_1px_0px_0px_#241442] ${
+                isSelected ? 'bg-[#241442]' : 'bg-white'
               }`}>
                 {isSelected && (
-                  <svg className="w-5 h-5 text-[#39FF14] drop-shadow-[0_0_4px_#39FF14]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <Check size={18} color="#39FF14" strokeWidth={3.5} />
                 )}
               </div>
             </button>
@@ -100,23 +100,24 @@ const CategoryScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onO
       </div>
 
       {/* Decorative Mascot Green Buddy */}
-      <div className="my-2 flex items-center justify-center gap-2">
-        <TeamMascot color="GREEN" size={36} />
-        <span className="text-[10.5px] text-[#160430] bg-white px-3 py-1 border-2 border-[#160430] rounded-xl font-black shadow-[2px_2px_0px_0px_#160430]">
+      <div className="my-1.5 p-2 bg-white border-2 border-[#241442] rounded-2xl flex items-center justify-center gap-2 shadow-[2px_2px_0px_0px_#241442] shrink-0">
+        <TeamMascot color="GREEN" size={30} />
+        <span className="text-[11px] text-[#1a0833] font-black">
           {settings.language === 'fa' ? '⚡ هرچی دسته‌ها متنوع‌تر، بازی مهیج‌تر!' : '⚡ Pick multiple categories for maximum thrills!'}
         </span>
       </div>
 
       {/* Footer Navigation */}
-      <div className="flex gap-3 mt-1">
+      <div className="flex gap-3 pt-2 shrink-0 border-t-2 border-[#241442]/20">
         <button 
           onClick={() => {
             sound.playClick();
             onBack();
           }} 
-          className="pixel-btn pixel-btn-dark flex-1 py-3.5 text-sm font-black uppercase tracking-wider"
+          className="pixel-btn pixel-btn-dark flex-1 py-3.5 text-sm font-black uppercase tracking-wider flex items-center justify-center gap-1.5"
         >
-          {t.back}
+          {isRTL ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
+          <span>{t.back}</span>
         </button>
         <button 
           onClick={() => {
@@ -126,7 +127,7 @@ const CategoryScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onO
           className="pixel-btn pixel-btn-pink flex-[2] py-3.5 text-base font-black uppercase tracking-wider flex items-center justify-center gap-2"
         >
           <span>{t.next}</span>
-          <NeonLightning size={18} color="#FFE600" />
+          {isRTL ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
         </button>
       </div>
     </div>

@@ -2,8 +2,20 @@ import React from 'react';
 import { GameSettings } from '../types';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
-import { NeonLightning, NeonBook, NeonSparkle, NeonVolume, NeonClock } from '../components/NeonIcons';
+import { 
+  NeonLightning, 
+  NeonBook, 
+  NeonSparkle, 
+  NeonVolume, 
+  NeonClock, 
+  NeonUsers, 
+  NeonSliders,
+  NeonPhone,
+  NeonFlame,
+  NeonSkull 
+} from '../components/NeonIcons';
 import { sound } from '../soundManager';
+import { Users, Flame, Zap, Skull, Sparkles, Clock, Phone, Volume2, HelpCircle, ArrowRight, ArrowLeft } from 'lucide-react';
 
 interface Props {
   settings: GameSettings;
@@ -21,36 +33,45 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
     onSave({ ...settings, [key]: value });
   };
 
+  const difficulty = settings.difficulty || 'easy';
+
   return (
-    <div className="flex-1 flex flex-col p-4 sm:p-5 select-none" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="h-full min-h-0 flex-1 flex flex-col p-3.5 sm:p-4 select-none overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       
       {/* Header with Party & Co SHOCK YOU! styling */}
-      <div className="flex items-center justify-between mb-3 bg-gradient-to-r from-[#7B2CBF] via-[#FF007F] to-[#FF2E93] text-white p-3.5 border-[3.5px] border-[#160430] rounded-2xl shadow-[4px_4px_0px_0px_#160430]">
+      <div className="flex items-center justify-between mb-2.5 bg-gradient-to-r from-[#7B2CBF] via-[#FF007F] to-[#FF2E93] text-white p-3 border-[3.5px] border-[#241442] rounded-2xl shadow-[4px_4px_0px_0px_#241442] shrink-0">
         <div className="flex items-center gap-2">
-          <NeonLightning size={22} color="#FFE600" />
-          <h2 className="text-base md:text-lg font-black uppercase tracking-wider">{t.setup}</h2>
+          <div className="w-8 h-8 rounded-xl bg-[#FFE600] border-2 border-[#241442] flex items-center justify-center text-[#241442] shadow-[1px_1px_0px_0px_#241442]">
+            <NeonSliders size={18} color="#241442" />
+          </div>
+          <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">{t.setup}</h2>
         </div>
         <button 
           onClick={() => {
             sound.playClick();
             onOpenHelp();
           }} 
-          className="px-3 py-1 bg-[#FFE600] hover:bg-yellow-300 text-[#160430] border-2 border-[#160430] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#160430] transition-colors flex items-center gap-1"
+          className="px-3 py-1.5 bg-[#FFE600] hover:bg-yellow-300 text-[#1a0833] border-2 border-[#241442] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#241442] transition-transform active:translate-y-0.5 flex items-center gap-1.5"
         >
-          <NeonBook size={14} color="#160430" glow={false} />
+          <HelpCircle size={15} color="#1a0833" />
           <span>{t.guide}</span>
         </button>
       </div>
 
-      {/* Main Form Dashboard */}
-      <div className="space-y-3.5 flex-1 overflow-y-auto pr-1 pb-2">
+      {/* Main Form Dashboard - Fully Scrollable with smooth touch */}
+      <div className="min-h-0 flex-1 overflow-y-auto pr-1 pb-3 space-y-3 overscroll-contain">
         
         {/* Player Count */}
-        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#160430] shadow-[4px_4px_0px_0px_#160430] rounded-2xl">
+        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#241442] shadow-[4px_4px_0px_0px_#241442] rounded-2xl">
           <div className="flex justify-between items-center mb-2.5">
-            <label className="text-[#160430] text-xs font-black uppercase tracking-wider">{t.players}</label>
-            <span className="text-[10px] bg-[#FFE600] border-2 border-[#160430] text-[#160430] px-2 py-0.5 rounded-lg font-black">
-              ⚡ 1 VS 1 MODE
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-[#00F0FF] border-2 border-[#241442] flex items-center justify-center text-[#1a0833]">
+                <Users size={14} />
+              </div>
+              <label className="text-[#1a0833] text-xs font-black uppercase tracking-wider">{t.players}</label>
+            </div>
+            <span className="text-[10px] bg-[#FFE600] border-2 border-[#241442] text-[#1a0833] px-2 py-0.5 rounded-lg font-black">
+              2 PLAYERS PER TEAM
             </span>
           </div>
           <div className="flex gap-2">
@@ -66,104 +87,144 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
                   }}
                   className={`pixel-btn flex-1 py-2.5 flex flex-col items-center justify-center font-black transition-all ${
                     isSelected 
-                    ? 'pixel-btn-lime text-[#160430]' 
+                    ? 'pixel-btn-lime text-[#1a0833]' 
                     : 'pixel-btn-dark text-[#00F0FF]'
                   }`}
                 >
-                  <span className="text-base font-black">{count} {t.players}</span>
-                  <span className="text-[9px] font-bold opacity-90 uppercase">({count/2} Teams)</span>
+                  <span className="text-sm sm:text-base font-black">{count} {t.players}</span>
+                  <span className={`text-[10px] font-black uppercase ${isSelected ? 'text-[#1a0833]' : 'text-slate-200'}`}>
+                    ({count/2} {settings.language === 'fa' ? 'تیم' : 'Teams'})
+                  </span>
                 </button>
               );
             })}
           </div>
         </section>
 
-        {/* Word Difficulty Levels */}
-        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#160430] shadow-[4px_4px_0px_0px_#160430] rounded-2xl">
+        {/* Word Difficulty Levels - AAA Contrast Guaranteed */}
+        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#241442] shadow-[4px_4px_0px_0px_#241442] rounded-2xl">
           <div className="flex justify-between items-center mb-2.5">
             <div>
-              <label className="text-[#160430] text-xs font-black uppercase tracking-wider block">
-                {t.difficulty_title || (settings.language === 'fa' ? 'سطح سختی کلمات' : 'Word Difficulty')}
-              </label>
-              <span className="text-[10px] text-slate-600 font-bold">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-[#FFE600] border-2 border-[#241442] flex items-center justify-center text-[#1a0833]">
+                  <Flame size={14} />
+                </div>
+                <label className="text-[#1a0833] text-xs font-black uppercase tracking-wider block">
+                  {t.difficulty_title || (settings.language === 'fa' ? 'سطح سختی کلمات' : 'Word Difficulty')}
+                </label>
+              </div>
+              <span className="text-[10px] text-slate-700 font-bold mt-0.5 block">
                 {t.difficulty_hint || (settings.language === 'fa' ? 'تک‌کلمه‌ای، ترکیبی یا ضرب‌المثل‌ها' : 'Choose word complexity')}
               </span>
             </div>
-            <span className={`px-2.5 py-0.5 border-2 border-[#160430] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#160430] ${
-              (settings.difficulty || 'easy') === 'easy' ? 'bg-[#39FF14] text-[#160430]' :
-              settings.difficulty === 'medium' ? 'bg-[#FFE600] text-[#160430]' :
-              settings.difficulty === 'hard' ? 'bg-[#FF1058] text-white' : 'bg-[#00F0FF] text-[#160430]'
+            <span className={`px-2.5 py-0.5 border-2 border-[#241442] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#241442] ${
+              difficulty === 'easy' ? 'bg-[#39FF14] text-[#1a0833]' :
+              difficulty === 'medium' ? 'bg-[#FFE600] text-[#1a0833]' :
+              difficulty === 'hard' ? 'bg-[#FF1058] text-white' : 'bg-[#00F0FF] text-[#1a0833]'
             }`}>
-              {(settings.difficulty || 'easy') === 'easy' ? (settings.language === 'fa' ? '🟢 آسان' : '🟢 Easy') :
-               settings.difficulty === 'medium' ? (settings.language === 'fa' ? '🟡 متوسط' : '🟡 Medium') :
-               settings.difficulty === 'hard' ? (settings.language === 'fa' ? '🔴 سخت' : '🔴 Hard') :
+              {difficulty === 'easy' ? (settings.language === 'fa' ? '🟢 آسان' : '🟢 Easy') :
+               difficulty === 'medium' ? (settings.language === 'fa' ? '🟡 متوسط' : '🟡 Medium') :
+               difficulty === 'hard' ? (settings.language === 'fa' ? '🔴 سخت' : '🔴 Hard') :
                (settings.language === 'fa' ? '🌈 ترکیبی' : '🌈 Mixed')}
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            {/* Easy */}
+          <div className="grid grid-cols-2 gap-2.5">
+            {/* Easy (Level 1) */}
             <button
               type="button"
               onClick={() => {
                 sound.playToggle();
                 updateSettings('difficulty', 'easy');
               }}
-              className={`pixel-btn p-2.5 flex flex-col items-start justify-between text-start rounded-xl transition-all ${
-                (settings.difficulty || 'easy') === 'easy'
-                  ? 'pixel-btn-lime text-[#160430] ring-2 ring-[#160430]'
-                  : 'pixel-btn-dark text-[#00F0FF]'
+              className={`pixel-btn p-3 flex flex-col items-start justify-between text-start rounded-2xl transition-all ${
+                difficulty === 'easy'
+                  ? 'bg-gradient-to-br from-[#5eff3b] to-[#39ff14] border-[3px] border-[#241442] text-[#1a0833] shadow-[3px_3px_0px_0px_#241442]'
+                  : 'pixel-btn-dark'
               }`}
             >
-              <div className="flex items-center gap-1 w-full justify-between">
-                <span className="font-black text-xs">🟢 {t.difficultyLevels?.easy || 'آسان'}</span>
-                <span className="text-[9px] px-1.5 py-0.5 bg-black/20 rounded font-black">L1</span>
+              <div className="flex items-center gap-1 w-full justify-between mb-1">
+                <div className="flex items-center gap-1.5">
+                  <Zap size={15} color={difficulty === 'easy' ? '#1a0833' : '#39FF14'} />
+                  <span className={`font-black text-xs ${difficulty === 'easy' ? 'text-[#1a0833]' : 'text-[#39FF14]'}`}>
+                    {t.difficultyLevels?.easy || 'آسان'}
+                  </span>
+                </div>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded font-black border border-[#241442] ${
+                  difficulty === 'easy' ? 'bg-[#241442] text-[#39FF14]' : 'bg-[#39FF14] text-[#1a0833]'
+                }`}>
+                  L1
+                </span>
               </div>
-              <span className="text-[10px] opacity-90 mt-1 font-bold leading-tight">
-                {t.difficultyDescs?.easy || (settings.language === 'fa' ? 'تک‌کلمه‌ای' : 'Single Words')}
+              <span className={`text-[11px] font-black leading-tight mt-0.5 ${
+                difficulty === 'easy' ? 'text-[#1a0833]' : 'text-slate-100'
+              }`}>
+                {t.difficultyDescs?.easy || (settings.language === 'fa' ? 'تک‌کلمه‌ای (لیوان، شیر، ماشین)' : 'Single words (Easy)')}
               </span>
             </button>
 
-            {/* Medium */}
+            {/* Medium (Level 2) */}
             <button
               type="button"
               onClick={() => {
                 sound.playToggle();
                 updateSettings('difficulty', 'medium');
               }}
-              className={`pixel-btn p-2.5 flex flex-col items-start justify-between text-start rounded-xl transition-all ${
-                settings.difficulty === 'medium'
-                  ? 'pixel-btn-yellow text-[#160430] ring-2 ring-[#160430]'
-                  : 'pixel-btn-dark text-[#00F0FF]'
+              className={`pixel-btn p-3 flex flex-col items-start justify-between text-start rounded-2xl transition-all ${
+                difficulty === 'medium'
+                  ? 'bg-gradient-to-br from-[#fff033] to-[#ffe600] border-[3px] border-[#241442] text-[#1a0833] shadow-[3px_3px_0px_0px_#241442]'
+                  : 'pixel-btn-dark'
               }`}
             >
-              <div className="flex items-center gap-1 w-full justify-between">
-                <span className="font-black text-xs">🟡 {t.difficultyLevels?.medium || 'متوسط'}</span>
-                <span className="text-[9px] px-1.5 py-0.5 bg-black/20 rounded font-black">L2</span>
+              <div className="flex items-center gap-1 w-full justify-between mb-1">
+                <div className="flex items-center gap-1.5">
+                  <Flame size={15} color={difficulty === 'medium' ? '#1a0833' : '#FFE600'} />
+                  <span className={`font-black text-xs ${difficulty === 'medium' ? 'text-[#1a0833]' : 'text-[#FFE600]'}`}>
+                    {t.difficultyLevels?.medium || 'متوسط'}
+                  </span>
+                </div>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded font-black border border-[#241442] ${
+                  difficulty === 'medium' ? 'bg-[#241442] text-[#FFE600]' : 'bg-[#FFE600] text-[#1a0833]'
+                }`}>
+                  L2
+                </span>
               </div>
-              <span className="text-[10px] opacity-90 mt-1 font-bold leading-tight">
-                {t.difficultyDescs?.medium || (settings.language === 'fa' ? 'کلمات ترکیبی' : 'Compound 2-Words')}
+              <span className={`text-[11px] font-black leading-tight mt-0.5 ${
+                difficulty === 'medium' ? 'text-[#1a0833]' : 'text-slate-100'
+              }`}>
+                {t.difficultyDescs?.medium || (settings.language === 'fa' ? 'کلمات ترکیبی ۲ کلمه‌ای' : 'Compound 2-Words')}
               </span>
             </button>
 
-            {/* Hard */}
+            {/* Hard (Level 3) */}
             <button
               type="button"
               onClick={() => {
                 sound.playToggle();
                 updateSettings('difficulty', 'hard');
               }}
-              className={`pixel-btn p-2.5 flex flex-col items-start justify-between text-start rounded-xl transition-all ${
-                settings.difficulty === 'hard'
-                  ? 'pixel-btn-pink text-white ring-2 ring-[#160430]'
-                  : 'pixel-btn-dark text-[#00F0FF]'
+              className={`pixel-btn p-3 flex flex-col items-start justify-between text-start rounded-2xl transition-all ${
+                difficulty === 'hard'
+                  ? 'bg-gradient-to-br from-[#ff2a6d] to-[#ff007f] border-[3px] border-[#241442] text-white shadow-[3px_3px_0px_0px_#241442]'
+                  : 'pixel-btn-dark'
               }`}
             >
-              <div className="flex items-center gap-1 w-full justify-between">
-                <span className="font-black text-xs">🔴 {t.difficultyLevels?.hard || 'سخت'}</span>
-                <span className="text-[9px] px-1.5 py-0.5 bg-black/20 rounded font-black">L3</span>
+              <div className="flex items-center gap-1 w-full justify-between mb-1">
+                <div className="flex items-center gap-1.5">
+                  <Skull size={15} color={difficulty === 'hard' ? '#FFFFFF' : '#FF5E97'} />
+                  <span className={`font-black text-xs ${difficulty === 'hard' ? 'text-white' : 'text-[#FF5E97]'}`}>
+                    {t.difficultyLevels?.hard || 'سخت'}
+                  </span>
+                </div>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded font-black border border-[#241442] ${
+                  difficulty === 'hard' ? 'bg-[#241442] text-[#FF007F]' : 'bg-[#FF007F] text-white'
+                }`}>
+                  L3
+                </span>
               </div>
-              <span className="text-[10px] opacity-90 mt-1 font-bold leading-tight">
+              <span className={`text-[11px] font-black leading-tight mt-0.5 ${
+                difficulty === 'hard' ? 'text-yellow-100' : 'text-slate-100'
+              }`}>
                 {t.difficultyDescs?.hard || (settings.language === 'fa' ? 'عبارات و ضرب‌المثل‌ها' : 'Proverbs & Phrases')}
               </span>
             </button>
@@ -175,33 +236,49 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
                 sound.playToggle();
                 updateSettings('difficulty', 'all');
               }}
-              className={`pixel-btn p-2.5 flex flex-col items-start justify-between text-start rounded-xl transition-all ${
-                settings.difficulty === 'all'
-                  ? 'pixel-btn-cyan text-[#160430] ring-2 ring-[#160430]'
-                  : 'pixel-btn-dark text-[#00F0FF]'
+              className={`pixel-btn p-3 flex flex-col items-start justify-between text-start rounded-2xl transition-all ${
+                difficulty === 'all'
+                  ? 'bg-gradient-to-br from-[#4de8ff] to-[#00f0ff] border-[3px] border-[#241442] text-[#1a0833] shadow-[3px_3px_0px_0px_#241442]'
+                  : 'pixel-btn-dark'
               }`}
             >
-              <div className="flex items-center gap-1 w-full justify-between">
-                <span className="font-black text-xs">🌈 {t.difficultyLevels?.all || 'ترکیبی'}</span>
-                <span className="text-[9px] px-1.5 py-0.5 bg-black/20 rounded font-black">All</span>
+              <div className="flex items-center gap-1 w-full justify-between mb-1">
+                <div className="flex items-center gap-1.5">
+                  <Sparkles size={15} color={difficulty === 'all' ? '#1a0833' : '#00F0FF'} />
+                  <span className={`font-black text-xs ${difficulty === 'all' ? 'text-[#1a0833]' : 'text-[#00F0FF]'}`}>
+                    {t.difficultyLevels?.all || 'ترکیبی'}
+                  </span>
+                </div>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded font-black border border-[#241442] ${
+                  difficulty === 'all' ? 'bg-[#241442] text-[#00F0FF]' : 'bg-[#00F0FF] text-[#1a0833]'
+                }`}>
+                  ALL
+                </span>
               </div>
-              <span className="text-[10px] opacity-90 mt-1 font-bold leading-tight">
-                {t.difficultyDescs?.all || (settings.language === 'fa' ? 'ترکیب همه سطوح' : 'All Tiers')}
+              <span className={`text-[11px] font-black leading-tight mt-0.5 ${
+                difficulty === 'all' ? 'text-[#1a0833]' : 'text-slate-100'
+              }`}>
+                {t.difficultyDescs?.all || (settings.language === 'fa' ? 'ترکیب تصادفی همه سطوح' : 'Random mix of all tiers')}
               </span>
             </button>
           </div>
         </section>
 
         {/* Rounds Count Slider */}
-        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#160430] shadow-[4px_4px_0px_0px_#160430] rounded-2xl">
+        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#241442] shadow-[4px_4px_0px_0px_#241442] rounded-2xl">
           <div className="flex justify-between items-center mb-2">
-            <label className="text-[#160430] text-xs font-black uppercase tracking-wider">{t.rounds}</label>
-            <span className="bg-[#FF007F] text-white px-3 py-0.5 border-2 border-[#160430] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#160430]">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-[#FF007F] border-2 border-[#241442] flex items-center justify-center text-white">
+                <NeonLightning size={14} color="#FFE600" />
+              </div>
+              <label className="text-[#1a0833] text-xs font-black uppercase tracking-wider">{t.rounds}</label>
+            </div>
+            <span className="bg-[#FF007F] text-white px-3 py-0.5 border-2 border-[#241442] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#241442]">
               {settings.roundsCount} {t.round}
             </span>
           </div>
           <div className="flex items-center gap-4 mt-2">
-            <span className="text-xs font-bold text-slate-500">3</span>
+            <span className="text-xs font-bold text-slate-700">3</span>
             <input 
               type="range" min="3" max="10" step="1"
               value={settings.roundsCount}
@@ -209,23 +286,28 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
                 sound.playClick();
                 updateSettings('roundsCount', parseInt(e.target.value));
               }}
-              className="w-full h-3 bg-[#F4E8FF] border-2 border-[#160430] rounded-lg appearance-none cursor-pointer accent-[#FF007F]"
+              className="w-full h-3 bg-[#F4E8FF] border-2 border-[#241442] rounded-lg appearance-none cursor-pointer accent-[#FF007F]"
               style={{ outline: 'none' }}
             />
-            <span className="text-xs font-bold text-slate-500">10</span>
+            <span className="text-xs font-bold text-slate-700">10</span>
           </div>
         </section>
 
         {/* Round Duration Slider */}
-        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#160430] shadow-[4px_4px_0px_0px_#160430] rounded-2xl">
+        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#241442] shadow-[4px_4px_0px_0px_#241442] rounded-2xl">
           <div className="flex justify-between items-center mb-2">
-            <label className="text-[#160430] text-xs font-black uppercase tracking-wider">{t.duration}</label>
-            <span className="bg-[#00F0FF] text-[#160430] px-3 py-0.5 border-2 border-[#160430] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#160430]">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-[#00F0FF] border-2 border-[#241442] flex items-center justify-center text-[#1a0833]">
+                <Clock size={14} />
+              </div>
+              <label className="text-[#1a0833] text-xs font-black uppercase tracking-wider">{t.duration}</label>
+            </div>
+            <span className="bg-[#00F0FF] text-[#1a0833] px-3 py-0.5 border-2 border-[#241442] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#241442]">
               {settings.roundDuration} {t.seconds}
             </span>
           </div>
           <div className="flex items-center gap-4 mt-2">
-            <span className="text-xs font-bold text-slate-500">60s</span>
+            <span className="text-xs font-bold text-slate-700">60s</span>
             <input 
               type="range" min="60" max="300" step="15"
               value={settings.roundDuration}
@@ -233,23 +315,28 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
                 sound.playClick();
                 updateSettings('roundDuration', parseInt(e.target.value));
               }}
-              className="w-full h-3 bg-[#F4E8FF] border-2 border-[#160430] rounded-lg appearance-none cursor-pointer accent-[#00F0FF]"
+              className="w-full h-3 bg-[#F4E8FF] border-2 border-[#241442] rounded-lg appearance-none cursor-pointer accent-[#00F0FF]"
               style={{ outline: 'none' }}
             />
-            <span className="text-xs font-bold text-slate-500">300s</span>
+            <span className="text-xs font-bold text-slate-700">300s</span>
           </div>
         </section>
 
         {/* Turn Transition Mode */}
-        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#160430] shadow-[4px_4px_0px_0px_#160430] rounded-2xl">
+        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#241442] shadow-[4px_4px_0px_0px_#241442] rounded-2xl">
           <div className="flex justify-between items-center mb-2">
-            <label className="text-[#160430] text-xs font-black uppercase tracking-wider">
-              {settings.language === 'fa' ? 'حالت انتقال نوبت' : 'Turn Transition Mode'}
-            </label>
-            <span className="bg-[#FFE600] text-[#160430] px-2.5 py-0.5 border-2 border-[#160430] font-black text-[10px] rounded-xl shadow-[2px_2px_0px_0px_#160430]">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-[#FFE600] border-2 border-[#241442] flex items-center justify-center text-[#1a0833]">
+                <Phone size={14} />
+              </div>
+              <label className="text-[#1a0833] text-xs font-black uppercase tracking-wider">
+                {settings.language === 'fa' ? 'حالت تحویل نوبت' : 'Turn Passing Mode'}
+              </label>
+            </div>
+            <span className="bg-[#FFE600] text-[#1a0833] px-2.5 py-0.5 border-2 border-[#241442] font-black text-[10px] rounded-xl shadow-[2px_2px_0px_0px_#241442]">
               {settings.passPhoneScreenEnabled
-                ? (settings.language === 'fa' ? 'صفحه تحویل گوشی' : 'Pass-Phone Screen')
-                : (settings.language === 'fa' ? 'سرعت بالا ⚡ (پیش‌فرض)' : 'Fast Hot-Potato ⚡')}
+                ? (settings.language === 'fa' ? 'با صفحه تحویل گوشی' : 'Pass-Phone Screen')
+                : (settings.language === 'fa' ? 'انتقال سریع و مستقیم ⚡' : 'Fast Hot-Potato ⚡')}
             </span>
           </div>
           
@@ -262,16 +349,16 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
               }}
               className={`pixel-btn py-2.5 px-2 text-xs font-black uppercase flex flex-col items-center justify-center gap-1 rounded-xl transition-all ${
                 !settings.passPhoneScreenEnabled
-                  ? 'pixel-btn-lime text-[#160430] ring-2 ring-[#160430]'
+                  ? 'pixel-btn-lime text-[#1a0833] ring-2 ring-[#241442]'
                   : 'pixel-btn-dark text-[#00F0FF]'
               }`}
             >
-              <span className="text-sm">⚡</span>
+              <Zap size={16} color={!settings.passPhoneScreenEnabled ? '#1a0833' : '#00F0FF'} />
               <span className="text-[11px] leading-tight">
-                {settings.language === 'fa' ? 'شروع فوری (Hot Potato)' : 'Fast Hot-Potato'}
+                {settings.language === 'fa' ? 'شروع فوری (سیب‌زمینی داغ)' : 'Fast Instant'}
               </span>
-              <span className="text-[9px] font-bold opacity-80">
-                {settings.language === 'fa' ? '(پیش‌فرض - بدون معطلی)' : '(Default - Instant)'}
+              <span className={`text-[9px] font-black ${!settings.passPhoneScreenEnabled ? 'text-[#1a0833]' : 'text-slate-200'}`}>
+                {settings.language === 'fa' ? '(پیش‌فرض پرسرعت)' : '(Default)'}
               </span>
             </button>
 
@@ -283,15 +370,15 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
               }}
               className={`pixel-btn py-2.5 px-2 text-xs font-black uppercase flex flex-col items-center justify-center gap-1 rounded-xl transition-all ${
                 settings.passPhoneScreenEnabled
-                  ? 'pixel-btn-cyan text-[#160430] ring-2 ring-[#160430]'
+                  ? 'pixel-btn-cyan text-[#1a0833] ring-2 ring-[#241442]'
                   : 'pixel-btn-dark text-[#00F0FF]'
               }`}
             >
-              <span className="text-sm">📱</span>
+              <Phone size={16} color={settings.passPhoneScreenEnabled ? '#1a0833' : '#00F0FF'} />
               <span className="text-[11px] leading-tight">
-                {settings.language === 'fa' ? 'صفحه تحویل و آمادگی' : 'Pass-Phone Screen'}
+                {settings.language === 'fa' ? 'صفحه تحویل و مخفی‌سازی' : 'Pass Phone Guard'}
               </span>
-              <span className="text-[9px] font-bold opacity-80">
+              <span className={`text-[9px] font-black ${settings.passPhoneScreenEnabled ? 'text-[#1a0833]' : 'text-slate-200'}`}>
                 {settings.language === 'fa' ? '(مخفی ماندن کلمه)' : '(Word Secrecy)'}
               </span>
             </button>
@@ -299,13 +386,18 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
         </section>
 
         {/* Sound & Music Effects */}
-        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#160430] shadow-[4px_4px_0px_0px_#160430] rounded-2xl">
+        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#241442] shadow-[4px_4px_0px_0px_#241442] rounded-2xl">
           <div className="flex justify-between items-center mb-2">
-            <label className="text-[#160430] text-xs font-black uppercase tracking-wider">
-              {settings.language === 'fa' ? 'صدا و موسیقی هیجان‌انگیز' : 'Sound & Music'}
-            </label>
-            <span className={`px-2.5 py-0.5 border-2 border-[#160430] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#160430] ${
-              settings.soundEnabled !== false ? 'bg-[#39FF14] text-[#160430]' : 'bg-slate-200 text-slate-700'
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-[#39FF14] border-2 border-[#241442] flex items-center justify-center text-[#1a0833]">
+                <Volume2 size={14} />
+              </div>
+              <label className="text-[#1a0833] text-xs font-black uppercase tracking-wider">
+                {settings.language === 'fa' ? 'صدا و موسیقی هیجان‌انگیز' : 'Sound & Music'}
+              </label>
+            </div>
+            <span className={`px-2.5 py-0.5 border-2 border-[#241442] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#241442] ${
+              settings.soundEnabled !== false ? 'bg-[#39FF14] text-[#1a0833]' : 'bg-slate-200 text-slate-800'
             }`}>
               {settings.soundEnabled !== false 
                 ? (settings.language === 'fa' ? 'فعال 🔊' : 'ON 🔊') 
@@ -323,11 +415,11 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
               }}
               className={`pixel-btn flex-1 py-2.5 text-xs font-black uppercase flex items-center justify-center gap-1.5 rounded-xl ${
                 settings.soundEnabled !== false 
-                  ? 'pixel-btn-lime text-[#160430]' 
+                  ? 'pixel-btn-lime text-[#1a0833]' 
                   : 'pixel-btn-dark text-[#00F0FF]'
               }`}
             >
-              <NeonVolume size={18} color="#160430" glow={false} />
+              <NeonVolume size={18} color={settings.soundEnabled !== false ? '#1a0833' : '#00F0FF'} glow={false} />
               <span>{settings.language === 'fa' ? 'صدا وصل' : 'Sound ON'}</span>
             </button>
             <button
@@ -347,26 +439,28 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
             </button>
           </div>
         </section>
+
+        {/* Mascot Buddy Tip */}
+        <div className="p-2.5 bg-white border-2 border-[#241442] rounded-2xl flex items-center justify-center gap-2 shadow-[2px_2px_0px_0px_#241442]">
+          <TeamMascot color="BLUE" size={32} />
+          <p className="text-[11px] text-[#1a0833] font-black">
+            {settings.language === 'fa' ? '⚡ تنظیمات را برای یک رقابت پرشور آماده کن!' : '⚡ Ready for an epic Party Shock battle!'}
+          </p>
+        </div>
+
       </div>
 
-      {/* Decorative Mascot Buddy */}
-      <div className="my-2 flex items-center justify-center gap-2">
-        <TeamMascot color="BLUE" size={36} />
-        <p className="text-[10.5px] text-[#160430] bg-white px-3 py-1 border-2 border-[#160430] rounded-xl font-black shadow-[2px_2px_0px_0px_#160430]">
-          {settings.language === 'fa' ? '⚡ تنظیمات را برای یک رقابت پرشور آماده کن!' : '⚡ Configure your match for maximum party fun!'}
-        </p>
-      </div>
-
-      {/* Footer Navigation */}
-      <div className="flex gap-3 mt-1">
+      {/* Footer Navigation (Anchored) */}
+      <div className="flex gap-3 pt-2 shrink-0 border-t-2 border-[#241442]/20">
         <button 
           onClick={() => {
             sound.playClick();
             onBack();
           }} 
-          className="pixel-btn pixel-btn-dark flex-1 py-3.5 text-sm font-black uppercase tracking-wider"
+          className="pixel-btn pixel-btn-dark flex-1 py-3.5 text-sm font-black uppercase tracking-wider flex items-center justify-center gap-1.5"
         >
-          {t.back}
+          {isRTL ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
+          <span>{t.back}</span>
         </button>
         <button 
           onClick={() => {
@@ -376,7 +470,7 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
           className="pixel-btn pixel-btn-pink flex-[2] py-3.5 text-base font-black uppercase tracking-wider flex items-center justify-center gap-2"
         >
           <span>{t.next}</span>
-          <NeonLightning size={18} color="#FFE600" />
+          {isRTL ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
         </button>
       </div>
     </div>

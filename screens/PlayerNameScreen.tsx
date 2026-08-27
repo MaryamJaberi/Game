@@ -3,8 +3,8 @@ import { GameSettings, TeamColor } from '../types';
 import { COLORS_MAP } from '../constants';
 import { TRANSLATIONS } from '../translations';
 import { TeamMascot } from '../components/Mascots';
-import { NeonLightning, NeonBook, NeonSparkle } from '../components/NeonIcons';
 import { sound } from '../soundManager';
+import { Users, HelpCircle, ArrowRight, ArrowLeft, Zap, Sparkles } from 'lucide-react';
 
 interface Props {
   settings: GameSettings;
@@ -36,42 +36,44 @@ const PlayerNameScreen: React.FC<Props> = ({ settings, onSave, onStart, onBack, 
   };
 
   return (
-    <div className="flex-1 flex flex-col p-4 sm:p-5 select-none overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="h-full min-h-0 flex-1 flex flex-col p-3.5 sm:p-4 select-none overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with Party & Co SHOCK YOU! style */}
-      <div className="flex items-center justify-between mb-3 bg-gradient-to-r from-[#7B2CBF] via-[#FF007F] to-[#FF2E93] text-white p-3.5 border-[3.5px] border-[#160430] rounded-2xl shadow-[4px_4px_0px_0px_#160430]">
+      <div className="flex items-center justify-between mb-2.5 bg-gradient-to-r from-[#7B2CBF] via-[#FF007F] to-[#FF2E93] text-white p-3 border-[3.5px] border-[#241442] rounded-2xl shadow-[4px_4px_0px_0px_#241442] shrink-0">
         <div className="flex items-center gap-2">
-          <NeonLightning size={22} color="#FFE600" />
-          <h2 className="text-base md:text-lg font-black uppercase tracking-wider">{t.playerNames}</h2>
+          <div className="w-8 h-8 rounded-xl bg-[#FFE600] border-2 border-[#241442] flex items-center justify-center text-[#1a0833] shadow-[1px_1px_0px_0px_#241442]">
+            <Users size={18} color="#1a0833" />
+          </div>
+          <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">{t.playerNames}</h2>
         </div>
         <button 
           onClick={() => {
             sound.playClick();
             onOpenHelp();
           }} 
-          className="px-3 py-1 bg-[#FFE600] hover:bg-yellow-300 text-[#160430] border-2 border-[#160430] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#160430] transition-colors flex items-center gap-1"
+          className="px-3 py-1.5 bg-[#FFE600] hover:bg-yellow-300 text-[#1a0833] border-2 border-[#241442] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#241442] transition-transform active:translate-y-0.5 flex items-center gap-1.5"
         >
-          <NeonBook size={14} color="#160430" glow={false} />
+          <HelpCircle size={15} color="#1a0833" />
           <span>{t.guide}</span>
         </button>
       </div>
 
-      <p className="text-[#160430] text-[11px] font-black mb-3 bg-white p-2.5 border-2 border-[#160430] rounded-xl shadow-[2px_2px_0px_0px_#160430] text-center flex items-center justify-center gap-1.5" dir={isRTL ? 'rtl' : 'ltr'}>
-        <NeonSparkle size={14} color="#00F0FF" />
+      <p className="text-[#1a0833] text-[11px] font-black mb-2.5 bg-white p-2 border-2 border-[#241442] rounded-xl shadow-[2px_2px_0px_0px_#241442] text-center flex items-center justify-center gap-1.5 shrink-0" dir={isRTL ? 'rtl' : 'ltr'}>
+        <Sparkles size={14} color="#00F0FF" />
         <span>{t.namesHint}</span>
       </p>
 
       {/* Players Input Form */}
-      <div className="flex-1 overflow-y-auto pr-1 space-y-3 pb-2">
+      <div className="min-h-0 flex-1 overflow-y-auto pr-1 space-y-2.5 pb-2 overscroll-contain">
         {Array.from({ length: settings.playerCount }).map((_, i) => {
           const color = getTeamColor(i);
           const colorConfig = COLORS_MAP[color];
           
           return (
-            <div key={i} className="flex items-center gap-3 bg-white p-3 border-[3.5px] border-[#160430] rounded-2xl shadow-[3px_3px_0px_0px_#160430]">
+            <div key={i} className="flex items-center gap-3 bg-white p-3 border-[3.5px] border-[#241442] rounded-2xl shadow-[3px_3px_0px_0px_#241442]">
               {/* Mascot & Number Badge */}
-              <div className="flex flex-col items-center justify-center flex-shrink-0">
-                <TeamMascot color={color} size={44} animate={false} />
-                <div className={`mt-0.5 px-2 py-0.5 rounded-lg text-[8.5px] font-black border-2 border-[#160430] ${colorConfig.bg} ${colorConfig.text} shadow-[1px_1px_0px_0px_#160430] uppercase`}>
+              <div className="flex flex-col items-center justify-center shrink-0">
+                <TeamMascot color={color} size={40} animate={false} />
+                <div className={`mt-0.5 px-2 py-0.5 rounded-lg text-[9px] font-black border-2 border-[#241442] ${colorConfig.bg} ${colorConfig.text} shadow-[1px_1px_0px_0px_#241442] uppercase`}>
                   #{i + 1} {labelColorText(color)}
                 </div>
               </div>
@@ -83,7 +85,7 @@ const PlayerNameScreen: React.FC<Props> = ({ settings, onSave, onStart, onBack, 
                 placeholder={`${t.players} ${i + 1}`}
                 value={settings.playerNames[i]}
                 onChange={(e) => updateName(i, e.target.value)}
-                className="flex-1 p-2.5 bg-[#F8EFFF] border-2 border-[#160430] rounded-xl focus:bg-white focus:outline-none transition-all font-black text-sm text-[#160430]"
+                className="flex-1 p-2.5 bg-[#F8EFFF] border-2 border-[#241442] rounded-xl focus:bg-white focus:outline-none transition-all font-black text-sm text-[#1a0833]"
               />
             </div>
           );
@@ -91,15 +93,16 @@ const PlayerNameScreen: React.FC<Props> = ({ settings, onSave, onStart, onBack, 
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex gap-3 mt-2">
+      <div className="flex gap-3 pt-2 shrink-0 border-t-2 border-[#241442]/20">
         <button 
           onClick={() => {
             sound.playClick();
             onBack();
           }} 
-          className="pixel-btn pixel-btn-dark flex-1 py-3.5 text-sm font-black uppercase tracking-wider"
+          className="pixel-btn pixel-btn-dark flex-1 py-3.5 text-sm font-black uppercase tracking-wider flex items-center justify-center gap-1.5"
         >
-          {t.back}
+          {isRTL ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
+          <span>{t.back}</span>
         </button>
         <button 
           onClick={() => {
@@ -110,11 +113,11 @@ const PlayerNameScreen: React.FC<Props> = ({ settings, onSave, onStart, onBack, 
           }} 
           disabled={!isReady}
           className={`pixel-btn flex-[2] py-3.5 text-base font-black uppercase tracking-wider flex items-center justify-center gap-2 ${
-            isReady ? 'pixel-btn-lime' : 'disabled'
+            isReady ? 'pixel-btn-lime text-[#1a0833]' : 'disabled'
           }`}
         >
           <span>{t.start}</span>
-          <NeonLightning size={20} color={isReady ? '#160430' : '#475569'} glow={false} />
+          <Zap size={18} color={isReady ? '#1a0833' : '#475569'} fill={isReady ? '#1a0833' : 'none'} />
         </button>
       </div>
     </div>

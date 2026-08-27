@@ -82,6 +82,8 @@ export const TRANSLATIONS: Record<Language, any> = {
     rules: "General Rules",
     howToPlay: "How to Play",
     noHistory: "No games played yet.",
+    quitGame: "Exit Game",
+    roundOver: "Over",
     teamNames: { BLUE: "Blue", RED: "Red", GREEN: "Green", YELLOW: "Yellow" },
     helpContent: {
       title: "'Turn' Game Guide",
@@ -160,7 +162,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     }
   },
   fa: {
-    title: "دُور",
+    title: "دور",
     subtitle: "بازی گروهی کلمات",
     newGame: "شروع بازی جدید",
     history: "تاریخچه",
@@ -206,7 +208,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     playerNames: "نام بازیکنان",
     namesHint: "یارها روبروی هم می‌نشینند. نوبت‌ها ساعتگرد است.",
     start: "شروع بازی",
-    round: "دُور",
+    round: "دور",
     of: "از",
     timeRound: "زمان دور",
     nextRound: "شروع دور بعدی",
@@ -227,6 +229,8 @@ export const TRANSLATIONS: Record<Language, any> = {
     rules: "قوانین کلی",
     howToPlay: "نحوه بازی",
     noHistory: "هنوز بازی‌ای ثبت نشده.",
+    quitGame: "خروج از بازی",
+    roundOver: "به پایان رسید",
     teamNames: { BLUE: "آبی", RED: "قرمز", GREEN: "سبز", YELLOW: "زرد" },
     helpContent: {
       title: "راهنمای بازی «دور»",
@@ -372,6 +376,8 @@ export const TRANSLATIONS: Record<Language, any> = {
     rules: "Algemene Regels",
     howToPlay: "Hoe te spelen",
     noHistory: "Nog geen historie.",
+    quitGame: "Spel Verlaten",
+    roundOver: "Afgelopen",
     teamNames: { BLUE: "Blauw", RED: "Rood", GREEN: "Groen", YELLOW: "Geel" },
     helpContent: {
       title: "Spelgids 'Beurt'",
@@ -512,6 +518,8 @@ export const TRANSLATIONS: Record<Language, any> = {
     rules: "Allgemeine Regeln",
     howToPlay: "Spielweise",
     noHistory: "Noch keine Spiele.",
+    quitGame: "Spiel beenden",
+    roundOver: "Beendet",
     teamNames: { BLUE: "Blau", RED: "Rot", GREEN: "Grün", YELLOW: "Gelb" },
     helpContent: {
       title: "Spielanleitung 'Runde'",
@@ -652,6 +660,8 @@ export const TRANSLATIONS: Record<Language, any> = {
     rules: "Règles Générales",
     howToPlay: "Comment jouer",
     noHistory: "Pas d'historique.",
+    quitGame: "Quitter la partie",
+    roundOver: "Terminée",
     teamNames: { BLUE: "Bleu", RED: "Rouge", GREEN: "Vert", YELLOW: "Jaune" },
     helpContent: {
       title: "Guide du jeu 'Tour'",
@@ -725,7 +735,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     }
   },
   ar: {
-    title: "دَوْر",
+    title: "دور",
     subtitle: "لعبة الكلمات الجماعية",
     newGame: "بدء لعبة جديدة",
     history: "السجل",
@@ -792,14 +802,16 @@ export const TRANSLATIONS: Record<Language, any> = {
     rules: "القواعد العامة",
     howToPlay: "كيفية اللعب",
     noHistory: "لا يوجد سجل ألعاب.",
+    quitGame: "الخروج من اللعبة",
+    roundOver: "انتهت",
     teamNames: { BLUE: "الأزرق", RED: "الأحمر", GREEN: "الأخضر", YELLOW: "الأصفر" },
     helpContent: {
-      title: "دليل لعبة «دَوْر»",
+      title: "دليل لعبة «دور»",
       sections: [
         {
           id: "intro",
           title: "مقدمة",
-          body: "«دَوْر» هي لعبة جماعية تُلعب بهاتف واحد. الهدف هو شرح الكلمات لزميلك ليقوم بتخمينها في أسرع وقت. اللعبة رائعة لتعلم اللغة."
+          body: "«دور» هي لعبة جماعية تُلعب بهاتف واحد. الهدف هو شرح الكلمات لزميلك ليقوم بتخمينها في أسرع وقت. اللعبة رائعة لتعلم اللغة."
         },
         {
           id: "teams",
@@ -932,6 +944,8 @@ export const TRANSLATIONS: Record<Language, any> = {
     rules: "Genel Kurallar",
     howToPlay: "Nasıl Oynanır",
     noHistory: "Henüz oyun yok.",
+    quitGame: "Oyundan Çık",
+    roundOver: "Bitti",
     teamNames: { BLUE: "Mavi", RED: "Kırmızı", GREEN: "Yeşil", YELLOW: "Sarı" },
     helpContent: {
       title: "'Dönem' Oyun Rehberi",
@@ -1072,6 +1086,8 @@ export const TRANSLATIONS: Record<Language, any> = {
     rules: "Zasady Ogólne",
     howToPlay: "Jak grać",
     noHistory: "Brak historii gier.",
+    quitGame: "Wyjdź z gry",
+    roundOver: "Zakończona",
     teamNames: { BLUE: "Niebiescy", RED: "Czerwoni", GREEN: "Zieloni", YELLOW: "Żółci" },
     helpContent: {
       title: "Instrukcja gry 'Kolejka'",
@@ -1212,6 +1228,8 @@ export const TRANSLATIONS: Record<Language, any> = {
     rules: "Загальні правила",
     howToPlay: "Как грати",
     noHistory: "Історія порожня.",
+    quitGame: "Вийти з гри",
+    roundOver: "Завершено",
     teamNames: { BLUE: "Сині", RED: "Червоні", GREEN: "Зелені", YELLOW: "Жовті" },
     helpContent: {
       title: "Гайд до гри 'Черга'",

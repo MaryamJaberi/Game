@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import { WORD_BANK, WordData } from '../words';
 import { TRANSLATIONS } from '../translations';
-import { TeamColor, Language, GameSettings, Team, Player, GameStatus } from '../types';
+import { TeamColor, Language, GameSettings, Team, Player, GameStatus, GameHistoryEntry } from '../types';
 
 describe('Game Words and Translation Bank Tests', () => {
   test('WORD_BANK is not empty and has valid categories', () => {
@@ -11,6 +11,7 @@ describe('Game Words and Translation Bank Tests', () => {
       expect(typeof word.category).toBe('string');
       expect(word.words).toBeDefined();
       expect(typeof word.words).toBe('object');
+      expect(['easy', 'medium', 'hard']).toContain(word.difficulty);
     });
   });
 
@@ -23,7 +24,24 @@ describe('Game Words and Translation Bank Tests', () => {
     });
   });
 
-  test('TRANSLATIONS dictionary contains expected languages and matching keys', () => {
+  test('Persian title and round strings do not contain illegible diacritics', () => {
+    const fa = TRANSLATIONS.fa;
+    expect(fa.title).toBe("دور");
+    expect(fa.round).toBe("دور");
+    // Ensure no damma (U+064F) or fat-ha (U+064E) or sukun (U+0652) is present in title
+    expect(fa.title).not.toContain('\u064F');
+    expect(fa.title).not.toContain('\u064E');
+    expect(fa.round).not.toContain('\u064F');
+  });
+
+  test('Arabic title and round strings do not contain illegible diacritics', () => {
+    const ar = TRANSLATIONS.ar;
+    expect(ar.title).toBe("دور");
+    expect(ar.title).not.toContain('\u064E');
+    expect(ar.title).not.toContain('\u0652');
+  });
+
+  test('TRANSLATIONS dictionary contains expected languages and all critical keys', () => {
     const supportedLanguages: Language[] = ['en', 'fa', 'nl', 'de', 'fr', 'ar', 'tr', 'pl', 'uk'];
     
     supportedLanguages.forEach((lang) => {
@@ -36,8 +54,57 @@ describe('Game Words and Translation Bank Tests', () => {
       expect(trans.players).toBeDefined();
       expect(trans.rounds).toBeDefined();
       expect(trans.duration).toBeDefined();
+      expect(trans.quitGame).toBeDefined();
+      expect(trans.roundOver).toBeDefined();
       expect(trans.teamNames).toBeDefined();
+      expect(trans.teamNames.BLUE).toBeDefined();
+      expect(trans.teamNames.RED).toBeDefined();
+      expect(trans.teamNames.GREEN).toBeDefined();
+      expect(trans.teamNames.YELLOW).toBeDefined();
     });
+  });
+});
+
+describe('Word Bank Filtering and Pool Shuffling Logic', () => {
+  test('Filters words correctly by single category and difficulty', () => {
+    const targetCategory = 'CAT_OBJECTS';
+    const targetDifficulty = 'easy';
+
+    const filtered = WORD_BANK.filter(w => w.category === targetCategory && w.difficulty === targetDifficulty);
+    expect(filtered.length).toBeGreaterThan(0);
+    filtered.forEach(w => {
+      expect(w.category).toBe(targetCategory);
+      expect(w.difficulty).toBe(targetDifficulty);
+    });
+  });
+
+  test('Filters words correctly when "all" (mixed) difficulty is selected', () => {
+    const targetCategories = ['CAT_OBJECTS', 'CAT_ANIMALS'];
+    const targetDifficulty = 'all';
+
+    const filtered = WORD_BANK.filter(w => 
+      targetCategories.includes(w.category) && 
+      (targetDifficulty === 'all' || w.difficulty === targetDifficulty)
+    );
+
+    expect(filtered.length).toBeGreaterThan(0);
+    const difficulties = new Set(filtered.map(w => w.difficulty));
+    expect(difficulties.size).toBeGreaterThan(1);
+  });
+
+  test('Fallback pool ensures game never crashes if filter produces empty set', () => {
+    const targetCategories = ['NON_EXISTENT_CAT'];
+    const targetDifficulty = 'easy';
+
+    let indices = WORD_BANK
+      .map((w, i) => (targetCategories.includes(w.category) && w.difficulty === targetDifficulty ? i : -1))
+      .filter(i => i !== -1);
+
+    if (indices.length === 0) {
+      indices = WORD_BANK.map((_, i) => i);
+    }
+
+    expect(indices.length).toBe(WORD_BANK.length);
   });
 });
 
@@ -130,7 +197,7 @@ describe('Team and Player Assignment & Opposite Seating Logic', () => {
   });
 });
 
-describe('Gameplay Screen Turn and Rotation Logic', () => {
+describe('Gameplay Screen Turn, Rotation, and Elimination Logic', () => {
   const findNextActivePlayer = (startIndex: number, players: Player[], teams: Team[]) => {
     const total = players.length;
     for (let i = 1; i <= total; i++) {
@@ -189,14 +256,34 @@ describe('Gameplay Screen Turn and Rotation Logic', () => {
     activeIdx = findNextActivePlayer(activeIdx, players, teams);
     expect(activeIdx).toBe(0);
   });
+
+  test('Team elimination triggers when team time reaches 0', () => {
+    let teams: Team[] = [
+      { id: 0, color: TeamColor.Blue, timeRemaining: 100, isEliminated: false, playerIds: [0, 2] },
+      { id: 1, color: TeamColor.Red, timeRemaining: 40000, isEliminated: false, playerIds: [1, 3] }
+    ];
+
+    // Deduct remaining time
+    teams = teams.map(t => {
+      if (t.id === 0) {
+        const timeRemaining = Math.max(0, t.timeRemaining - 150);
+        return { ...t, timeRemaining, isEliminated: timeRemaining <= 0 };
+      }
+      return t;
+    });
+
+    expect(teams[0].timeRemaining).toBe(0);
+    expect(teams[0].isEliminated).toBe(true);
+    expect(teams[1].isEliminated).toBe(false);
+
+    const activeTeams = teams.filter(t => !t.isEliminated);
+    expect(activeTeams.length).toBe(1);
+    expect(activeTeams[0].id).toBe(1);
+  });
 });
 
 describe('1-Second Undo Mechanism and Winner Evaluation', () => {
   test('Snapshot correctly restores previous player index, word, and timers', () => {
-    const initialPlayers: Player[] = [
-      { id: 0, name: 'P1', teamId: 0, teamColor: TeamColor.Blue },
-      { id: 1, name: 'P2', teamId: 1, teamColor: TeamColor.Red }
-    ];
     const initialTeams: Team[] = [
       { id: 0, color: TeamColor.Blue, timeRemaining: 45000, isEliminated: false, playerIds: [0] },
       { id: 1, color: TeamColor.Red, timeRemaining: 50000, isEliminated: false, playerIds: [1] }
@@ -248,6 +335,23 @@ describe('1-Second Undo Mechanism and Winner Evaluation', () => {
     expect(winners[0].timeRemaining).toBe(62000);
   });
 
+  test('Winner calculation correctly handles a tie between multiple teams', () => {
+    const teams: Team[] = [
+      { id: 0, color: TeamColor.Blue, timeRemaining: 50000, isEliminated: false, playerIds: [0, 2] },
+      { id: 1, color: TeamColor.Red, timeRemaining: 50000, isEliminated: false, playerIds: [1, 3] },
+      { id: 2, color: TeamColor.Green, timeRemaining: 30000, isEliminated: false, playerIds: [4, 5] },
+    ];
+
+    const activeTeams = teams.filter(t => !t.isEliminated);
+    const maxTime = Math.max(...activeTeams.map(t => t.timeRemaining));
+    const winners = activeTeams.filter(t => t.timeRemaining === maxTime);
+
+    expect(winners.length).toBe(2);
+    expect(winners.map(w => w.color)).toEqual([TeamColor.Blue, TeamColor.Red]);
+  });
+});
+
+describe('Turn Modes, Swap Timer, and Match History Entry Model', () => {
   test('Fast Hot-Potato mode advances turn immediately without modal when passPhoneScreenEnabled is false', () => {
     const settings: GameSettings = {
       playerCount: 4,
@@ -263,7 +367,6 @@ describe('1-Second Undo Mechanism and Winner Evaluation', () => {
     expect(settings.passPhoneScreenEnabled).toBe(false);
     expect(settings.soundEnabled).toBe(true);
 
-    // Simulate word guess in Fast Mode
     let gameStatus = GameStatus.ActiveTurn;
     let nextPlayerTriggered = false;
 
@@ -278,37 +381,31 @@ describe('1-Second Undo Mechanism and Winner Evaluation', () => {
     expect(nextPlayerTriggered).toBe(true);
   });
 
-  test('Pass Phone screen triggers intermediate modal when passPhoneScreenEnabled is true', () => {
-    const settings: GameSettings = {
-      playerCount: 4,
-      roundsCount: 3,
-      roundDuration: 90,
-      selectedCategories: ["CAT_OBJECTS"],
-      playerNames: ['P1', 'P2', 'P3', 'P4'],
-      language: 'fa',
-      passPhoneScreenEnabled: true,
-      soundEnabled: true
+  test('Swap cooldown allows swapping only when timer reaches 0', () => {
+    let swapCooldown = 20000;
+    const canSwapInitial = swapCooldown <= 0;
+    expect(canSwapInitial).toBe(false);
+
+    // Simulate 20 seconds elapsed
+    swapCooldown = 0;
+    const canSwapAfterElapsed = swapCooldown <= 0;
+    expect(canSwapAfterElapsed).toBe(true);
+  });
+
+  test('GameHistoryEntry includes language, valid timestamp date, and winners', () => {
+    const historyEntry: GameHistoryEntry = {
+      id: 'test_game_1',
+      date: new Date().toLocaleDateString('fa-IR'),
+      players: ['علی', 'سارا', 'رضا', 'مریم'],
+      winnerColor: TeamColor.Blue,
+      winnerNames: ['علی', 'رضا'],
+      language: 'fa'
     };
 
-    let gameStatus = GameStatus.ActiveTurn;
-    if (settings.passPhoneScreenEnabled) {
-      gameStatus = GameStatus.PassPhone;
-    }
-
-    expect(gameStatus).toBe(GameStatus.PassPhone);
-  });
-
-  test('Help and Guide content contains turn modes explanation in both Persian and English', () => {
-    const enTurnsHelp = TRANSLATIONS.en.helpContent.sections.find((s: any) => s.id === 'turns');
-    const faTurnsHelp = TRANSLATIONS.fa.helpContent.sections.find((s: any) => s.id === 'turns');
-
-    expect(enTurnsHelp).toBeDefined();
-    expect(enTurnsHelp?.body).toContain('Fast Hot-Potato');
-    expect(enTurnsHelp?.body).toContain('Pass-Phone');
-
-    expect(faTurnsHelp).toBeDefined();
-    expect(faTurnsHelp?.body).toContain('سریع');
-    expect(faTurnsHelp?.body).toContain('تحویل گوشی');
+    expect(historyEntry.id).toBeDefined();
+    expect(historyEntry.language).toBe('fa');
+    expect(historyEntry.winnerColor).toBe(TeamColor.Blue);
+    expect(historyEntry.winnerNames).toEqual(['علی', 'رضا']);
+    expect(historyEntry.players.length).toBe(4);
   });
 });
-

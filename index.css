@@ -15,26 +15,28 @@ html, body {
 
 body {
   font-family: 'Vazirmatn', 'Space Grotesk', system-ui, -apple-system, sans-serif;
-  background: radial-gradient(circle at 50% 15%, #2d0658 0%, #170430 65%, #0e0220 100%);
-  color: #160430;
+  /* Two shades lighter, rich vibrant purple/navy background */
+  background: radial-gradient(circle at 50% 15%, #4c1d95 0%, #2e1065 65%, #1e0b40 100%);
+  color: #241442;
   overflow-x: hidden;
 }
 
 /* Retro modern scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #170430;
+  background: #241442;
 }
 ::-webkit-scrollbar-thumb {
   background: #ff007f;
   border-radius: 9999px;
 }
 
-/* High-Energy Party & Co SHOCK YOU! Memphis Canvas (Image 1 & Image 2) */
+/* High-Energy Party & Co SHOCK YOU! Memphis Canvas */
 .bg-pixel-grid {
-  background-color: #fcf9ff;
+  background-color: #faf6ff;
   background-image: 
     radial-gradient(#d8b4fe 1.5px, transparent 1.5px),
     linear-gradient(rgba(216, 180, 254, 0.25) 1px, transparent 1px),
@@ -54,7 +56,7 @@ body {
   font-weight: 900;
 }
 
-/* Neon Glow Utility Filters (Image 2) */
+/* Neon Glow Utility Filters */
 .neon-glow-pink {
   filter: drop-shadow(0 0 8px rgba(255, 0, 127, 0.85));
 }
@@ -71,11 +73,11 @@ body {
   filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.85));
 }
 
-/* Memphis Party & Co SHOCK YOU! 3D Cards */
+/* Memphis Party & Co SHOCK YOU! 3D Cards - Lightened Border & Shadow (#241442) */
 .pixel-card {
   background: #ffffff;
-  border: 3.5px solid #160430;
-  box-shadow: 4px 4px 0px 0px #160430;
+  border: 3.5px solid #241442;
+  box-shadow: 4px 4px 0px 0px #241442;
   border-radius: 20px;
   position: relative;
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -83,15 +85,15 @@ body {
 
 .pixel-card-shock {
   background: #ffffff;
-  border: 3.5px solid #160430;
-  box-shadow: 4px 4px 0px 0px #ffe600, 8px 8px 0px 0px #ff007f, 11px 11px 0px 0px #160430;
+  border: 3.5px solid #241442;
+  box-shadow: 4px 4px 0px 0px #ffe600, 8px 8px 0px 0px #ff007f, 11px 11px 0px 0px #241442;
   border-radius: 22px;
 }
 
 .pixel-card-neon {
   background: #ffffff;
-  border: 3.5px solid #160430;
-  box-shadow: 4px 4px 0px 0px #00f0ff, 8px 8px 0px 0px #ff007f, 11px 11px 0px 0px #160430;
+  border: 3.5px solid #241442;
+  box-shadow: 4px 4px 0px 0px #00f0ff, 8px 8px 0px 0px #ff007f, 11px 11px 0px 0px #241442;
   border-radius: 22px;
 }
 
@@ -101,7 +103,7 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  border: 3.5px solid #160430;
+  border: 3.5px solid #241442;
   border-radius: 16px;
   font-weight: 900;
   text-transform: uppercase;
@@ -109,31 +111,31 @@ body {
   user-select: none;
   -webkit-user-select: none;
   cursor: pointer;
-  box-shadow: 0px 4px 0px 0px #160430, 3px 6px 0px 0px #160430;
+  box-shadow: 0px 4px 0px 0px #241442, 3px 6px 0px 0px #241442;
   transform: translateY(-3px);
   touch-action: manipulation;
 }
 
 .pixel-btn:active {
   transform: translateY(2px);
-  box-shadow: 0px 1px 0px 0px #160430, 1px 2px 0px 0px #160430;
+  box-shadow: 0px 1px 0px 0px #241442, 1px 2px 0px 0px #241442;
 }
 
 .pixel-btn:disabled, .pixel-btn.disabled {
   opacity: 0.55;
   background-color: #cbd5e1 !important;
-  color: #64748b !important;
+  color: #475569 !important;
   border-color: #475569 !important;
   box-shadow: 0px 2px 0px 0px #475569, 2px 4px 0px 0px #475569 !important;
   transform: translateY(-1px);
   cursor: not-allowed;
 }
 
-/* Party & Co SHOCK YOU! Button Themes (Image 1) */
+/* Party & Co SHOCK YOU! Button Themes - AAA Contrast Enforced */
 .pixel-btn-pink {
   background: linear-gradient(180deg, #ff1493 0%, #ff007f 40%, #d8006b 100%);
   color: #ffffff;
-  text-shadow: 1px 1px 0px rgba(0,0,0,0.4);
+  text-shadow: 0px 1px 2px rgba(0,0,0,0.6);
 }
 .pixel-btn-pink::after {
   content: '';
@@ -148,8 +150,8 @@ body {
 
 .pixel-btn-yellow {
   background: linear-gradient(180deg, #fff033 0%, #ffe600 50%, #f5b700 100%);
-  color: #160430;
-  text-shadow: 0px 1px 0px rgba(255,255,255,0.6);
+  color: #1a0833;
+  text-shadow: 0px 1px 0px rgba(255,255,255,0.7);
 }
 .pixel-btn-yellow::after {
   content: '';
@@ -164,8 +166,8 @@ body {
 
 .pixel-btn-cyan {
   background: linear-gradient(180deg, #4de8ff 0%, #00f0ff 50%, #00b4d8 100%);
-  color: #160430;
-  text-shadow: 0px 1px 0px rgba(255,255,255,0.6);
+  color: #1a0833;
+  text-shadow: 0px 1px 0px rgba(255,255,255,0.7);
 }
 .pixel-btn-cyan::after {
   content: '';
@@ -180,8 +182,8 @@ body {
 
 .pixel-btn-lime {
   background: linear-gradient(180deg, #5eff3b 0%, #39ff14 50%, #15c400 100%);
-  color: #160430;
-  text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
+  color: #1a0833;
+  text-shadow: 0px 1px 0px rgba(255,255,255,0.6);
 }
 .pixel-btn-lime::after {
   content: '';
@@ -197,7 +199,7 @@ body {
 .pixel-btn-purple {
   background: linear-gradient(180deg, #9d4edd 0%, #7b2cbf 50%, #5a189a 100%);
   color: #ffffff;
-  text-shadow: 1px 1px 0px rgba(0,0,0,0.4);
+  text-shadow: 0px 1px 2px rgba(0,0,0,0.6);
 }
 .pixel-btn-purple::after {
   content: '';
@@ -211,9 +213,10 @@ body {
 }
 
 .pixel-btn-dark {
-  background: linear-gradient(180deg, #2d0658 0%, #160430 100%);
+  /* 2 shades lighter navy-indigo */
+  background: linear-gradient(180deg, #3d1b70 0%, #241442 100%);
   color: #ffe600;
-  text-shadow: 0px 1px 2px rgba(0,0,0,0.6);
+  text-shadow: 0px 1px 2px rgba(0,0,0,0.7);
 }
 .pixel-btn-dark::after {
   content: '';
@@ -222,25 +225,25 @@ body {
   left: 6px;
   right: 6px;
   height: 3px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 9999px;
 }
 
 /* Custom RTL-friendly adjustments for pixel shadows */
 [dir="rtl"] .pixel-card {
-  box-shadow: -4px 4px 0px 0px #160430;
+  box-shadow: -4px 4px 0px 0px #241442;
 }
 [dir="rtl"] .pixel-card-shock {
-  box-shadow: -4px 4px 0px 0px #ffe600, -8px 8px 0px 0px #ff007f, -11px 11px 0px 0px #160430;
+  box-shadow: -4px 4px 0px 0px #ffe600, -8px 8px 0px 0px #ff007f, -11px 11px 0px 0px #241442;
 }
 [dir="rtl"] .pixel-card-neon {
-  box-shadow: -4px 4px 0px 0px #00f0ff, -8px 8px 0px 0px #ff007f, -11px 11px 0px 0px #160430;
+  box-shadow: -4px 4px 0px 0px #00f0ff, -8px 8px 0px 0px #ff007f, -11px 11px 0px 0px #241442;
 }
 [dir="rtl"] .pixel-btn {
-  box-shadow: 0px 4px 0px 0px #160430, -3px 6px 0px 0px #160430;
+  box-shadow: 0px 4px 0px 0px #241442, -3px 6px 0px 0px #241442;
 }
 [dir="rtl"] .pixel-btn:active {
-  box-shadow: 0px 1px 0px 0px #160430, -1px 2px 0px 0px #160430;
+  box-shadow: 0px 1px 0px 0px #241442, -1px 2px 0px 0px #241442;
 }
 
 /* Fun Animations */
