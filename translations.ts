@@ -215,7 +215,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     roundEnded: "دور {n} به پایان رسید",
     passPhone: "گوشی را به نفر بعدی بدهید",
     paused: "بازی متوقف شد",
-    resume: "فهمیدم",
+    resume: "ادامه بازی",
     exit: "خروج",
     swap: "تعویض کلمه",
     swapReady: "تعویض تا {n} ثانیه",

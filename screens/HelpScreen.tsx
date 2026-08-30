@@ -20,7 +20,7 @@ const HelpScreen: React.FC<Props> = ({ language, onClose, initialSection }) => {
   useEffect(() => {
     if (initialSection && scrollRef.current) {
       const element = document.getElementById(`help-${initialSection}`);
-      if (element) {
+      if (element && typeof element.scrollIntoView === 'function') {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     }

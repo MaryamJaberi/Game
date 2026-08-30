@@ -5,6 +5,7 @@ import { TeamMascot } from '../components/Mascots';
 import { sound } from '../soundManager';
 import { auth, signInWithGoogle, logOut } from '../firebase';
 import { User, onAuthStateChanged } from 'firebase/auth';
+import InstallPromptModal from '../components/InstallPromptModal';
 import { 
   Gamepad2, 
   Trophy, 
@@ -15,7 +16,9 @@ import {
   LogOut as LogOutIcon, 
   Globe, 
   CheckCircle,
-  CloudCheck
+  CloudCheck,
+  Smartphone,
+  Download
 } from 'lucide-react';
 
 interface Props {
@@ -33,12 +36,44 @@ const IntroScreen: React.FC<Props> = ({ language, onLanguageChange, onNext, onOp
   const [partyEmote, setPartyEmote] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(false);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isAppInstalled, setIsAppInstalled] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
     return () => unsubscribe();
+  }, []);
+
+  // Listen for PWA beforeinstallprompt
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    const handleAppInstalled = () => {
+      setIsAppInstalled(true);
+      setDeferredPrompt(null);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    // Check if running in standalone PWA mode
+    if (typeof window !== 'undefined') {
+      const isStandaloneMedia = typeof window.matchMedia === 'function' && window.matchMedia('(display-mode: standalone)').matches;
+      if (isStandaloneMedia || (navigator as any)?.standalone) {
+        setIsAppInstalled(true);
+      }
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
   }, []);
 
   const isRTL = language === 'fa' || language === 'ar';
@@ -66,6 +101,11 @@ const IntroScreen: React.FC<Props> = ({ language, onLanguageChange, onNext, onOp
         setIsAuthLoading(false);
       }
     }
+  };
+
+  const handleOpenInstall = () => {
+    sound.playClick();
+    setIsInstallModalOpen(true);
   };
 
   return (
@@ -162,7 +202,7 @@ const IntroScreen: React.FC<Props> = ({ language, onLanguageChange, onNext, onOp
       </div>
 
       {/* Interactive Controls & Language Selection Area */}
-      <div className="w-full max-w-sm space-y-3 shrink-0">
+      <div className="w-full max-w-sm space-y-2.5 shrink-0">
         
         {/* Language Selector Card */}
         <div className="bg-white p-2.5 sm:p-3 rounded-2xl border-[3.5px] border-[#241442] shadow-[4px_4px_0px_0px_#241442]">
@@ -233,14 +273,61 @@ const IntroScreen: React.FC<Props> = ({ language, onLanguageChange, onNext, onOp
               <span>{t.guide}</span>
             </button>
           </div>
+
+          {/* PWA / Mobile Installation Banner & Button */}
+          <div className="bg-gradient-to-r from-[#1b0933] to-[#301254] p-2.5 rounded-2xl border-2 border-[#FFE600] shadow-[3px_3px_0px_0px_#241442] flex flex-col gap-1.5 text-white">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 text-right flex-1 min-w-0">
+                <div className="w-7 h-7 rounded-lg bg-[#FFE600] flex items-center justify-center text-[#1a0833] shrink-0 font-black">
+                  <Smartphone size={16} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[11px] font-black text-[#FFE600] leading-tight truncate">
+                    {language === 'fa' ? '📲 نصب روی موبایل (Android & iOS)' : '📲 Mobile App & PWA'}
+                  </div>
+                  <div className="text-[9.5px] text-slate-300 truncate">
+                    {language === 'fa' ? 'افزودن به صفحه اصلی • اجرای آفلاین' : 'Add to Home Screen • Fast & Offline'}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={handleOpenInstall}
+                className="px-3 py-1.5 bg-[#39FF14] hover:bg-[#32e012] text-[#1a0833] font-black text-xs rounded-xl border-2 border-[#241442] shadow-[2px_2px_0px_0px_#241442] active:translate-y-0.5 shrink-0 flex items-center gap-1"
+              >
+                <Download size={13} />
+                <span>{language === 'fa' ? 'نصب / افزودن' : 'Install / Add'}</span>
+              </button>
+            </div>
+
+            {/* Sub-badge indicating native store release coming soon */}
+            <div className="text-[9px] text-[#00F0FF] bg-[#241442]/90 px-2 py-0.5 rounded-lg border border-[#00F0FF]/30 flex items-center justify-center gap-1 font-bold">
+              <Zap size={10} color="#00F0FF" fill="#00F0FF" />
+              <span>
+                {language === 'fa' 
+                  ? 'نسخه اندروید و iOS به‌زودی در استورها (هم‌اکنون قابل افزودن به صفحه اصلی)' 
+                  : 'Android & iOS native apps coming soon (Add to Home Screen ready!)'}
+              </span>
+            </div>
+          </div>
+
         </div>
       </div>
 
       {/* Footer Tag */}
-      <div className="mt-1.5 px-3 py-0.5 bg-[#241442] text-[#00F0FF] text-[9.5px] font-mono tracking-widest rounded-full border border-[#00F0FF]/30 flex items-center gap-1 shrink-0">
+      <div className="mt-1 px-3 py-0.5 bg-[#241442] text-[#00F0FF] text-[9.5px] font-mono tracking-widest rounded-full border border-[#00F0FF]/30 flex items-center gap-1 shrink-0">
         <Zap size={11} color="#00F0FF" fill="#00F0FF" />
         <span>PARTY & CO • SHOCK EDITION</span>
       </div>
+
+      {/* Install Prompt & Guide Modal */}
+      <InstallPromptModal
+        language={language}
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+        deferredPrompt={deferredPrompt}
+        onInstalled={() => setIsAppInstalled(true)}
+      />
     </div>
   );
 };
