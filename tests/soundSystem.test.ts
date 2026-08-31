@@ -1,10 +1,12 @@
 import { describe, test, expect, beforeEach, vi, afterEach } from 'vitest';
 import { sound } from '../soundManager';
 
-describe('Sound System and Audio Synthesizer Verification', () => {
+describe('Sound System and Audio Synthesizer Verification with Granular Controls', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     sound.setMuted(false);
+    sound.setSfxEnabled(true);
+    sound.setBgmEnabled(true);
   });
 
   afterEach(() => {
@@ -17,20 +19,43 @@ describe('Sound System and Audio Synthesizer Verification', () => {
     expect(ctx).not.toBeNull();
   });
 
-  test('Mute and sound enabled toggles work accurately', () => {
+  test('Master sound enabled/mute toggle works accurately', () => {
     sound.setSoundEnabled(false);
     expect(sound.getMuted()).toBe(true);
     expect(sound.isSoundEnabled()).toBe(false);
+    expect(sound.isSfxEnabled()).toBe(false);
+    expect(sound.isBgmEnabled()).toBe(false);
 
     sound.setSoundEnabled(true);
     expect(sound.getMuted()).toBe(false);
     expect(sound.isSoundEnabled()).toBe(true);
+    expect(sound.isSfxEnabled()).toBe(true);
+    expect(sound.isBgmEnabled()).toBe(true);
   });
 
-  test('Tactile click sound triggers without error and respects mute', () => {
+  test('Independent SFX and BGM granular controls operate correctly', () => {
+    // Disable BGM while keeping SFX enabled
+    sound.setBgmEnabled(false);
+    expect(sound.isBgmEnabled()).toBe(false);
+    expect(sound.isSfxEnabled()).toBe(true);
+    expect(sound.isSoundEnabled()).toBe(true);
+
+    // Disable SFX while re-enabling BGM
+    sound.setSfxEnabled(false);
+    sound.setBgmEnabled(true);
+    expect(sound.isSfxEnabled()).toBe(false);
+    expect(sound.isBgmEnabled()).toBe(true);
+
+    // Disable both
+    sound.setBgmEnabled(false);
+    expect(sound.isSfxEnabled()).toBe(false);
+    expect(sound.isBgmEnabled()).toBe(false);
+  });
+
+  test('Tactile click sound triggers without error and respects SFX toggle', () => {
     expect(() => sound.playClick()).not.toThrow();
 
-    sound.setMuted(true);
+    sound.setSfxEnabled(false);
     expect(() => sound.playClick()).not.toThrow();
   });
 
@@ -58,11 +83,8 @@ describe('Sound System and Audio Synthesizer Verification', () => {
   });
 
   test('Tick-tock alternating clock sounds execute properly', () => {
-    // Tick 1
     expect(() => sound.playTick()).not.toThrow();
-    // Tock 2
     expect(() => sound.playTick()).not.toThrow();
-    // Tick 3
     expect(() => sound.playTick()).not.toThrow();
   });
 
@@ -82,15 +104,18 @@ describe('Sound System and Audio Synthesizer Verification', () => {
     expect(() => sound.playWinner()).not.toThrow();
   });
 
-  test('Procedural Menu BGM and Gameplay BGM schedule and stop cleanly', () => {
+  test('Procedural Menu BGM and Gameplay BGM schedule, tempo adapt, and stop cleanly', () => {
     vi.useFakeTimers();
 
     sound.startMenuBGM();
-    // Advance timers by several beats
     vi.advanceTimersByTime(1200);
 
     // Switch to Gameplay BGM
     sound.startGameplayBGM(60);
+    vi.advanceTimersByTime(1000);
+
+    // Speed up tempo in last 5 seconds
+    sound.startGameplayBGM(4);
     vi.advanceTimersByTime(1000);
 
     // Stop BGM

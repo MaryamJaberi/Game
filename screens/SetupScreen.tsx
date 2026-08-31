@@ -15,7 +15,7 @@ import {
   NeonSkull 
 } from '../components/NeonIcons';
 import { sound } from '../soundManager';
-import { Users, Flame, Zap, Skull, Sparkles, Clock, Phone, Volume2, HelpCircle, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Users, Flame, Zap, Skull, Sparkles, Clock, Phone, Volume2, VolumeX, Music, Bell, HelpCircle, ArrowRight, ArrowLeft } from 'lucide-react';
 
 interface Props {
   settings: GameSettings;
@@ -385,57 +385,137 @@ const SetupScreen: React.FC<Props> = ({ settings, onSave, onNext, onBack, onOpen
           </div>
         </section>
 
-        {/* Sound & Music Effects */}
-        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#241442] shadow-[4px_4px_0px_0px_#241442] rounded-2xl">
-          <div className="flex justify-between items-center mb-2">
+        {/* Sound & Music Effects - Granular Audio Controls */}
+        <section className="bg-white p-3.5 sm:p-4 border-[3.5px] border-[#241442] shadow-[4px_4px_0px_0px_#241442] rounded-2xl space-y-3">
+          <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-[#39FF14] border-2 border-[#241442] flex items-center justify-center text-[#1a0833]">
-                <Volume2 size={14} />
+              <div className="w-7 h-7 rounded-lg bg-[#39FF14] border-2 border-[#241442] flex items-center justify-center text-[#1a0833] shadow-[1px_1px_0px_0px_#241442]">
+                <Volume2 size={16} />
               </div>
-              <label className="text-[#1a0833] text-xs font-black uppercase tracking-wider">
-                {settings.language === 'fa' ? 'صدا و موسیقی هیجان‌انگیز' : 'Sound & Music'}
-              </label>
+              <div>
+                <label className="text-[#1a0833] text-xs font-black uppercase tracking-wider block">
+                  {settings.language === 'fa' ? 'مدیریت صدا و موسیقی بازی' : 'Audio Controls & Music'}
+                </label>
+                <span className="text-[10px] text-slate-500 font-bold block">
+                  {settings.language === 'fa' ? 'کنترل جداگانه افکت‌ها و موزیک زمینه' : 'Independent control for SFX & BGM'}
+                </span>
+              </div>
             </div>
-            <span className={`px-2.5 py-0.5 border-2 border-[#241442] font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#241442] ${
-              settings.soundEnabled !== false ? 'bg-[#39FF14] text-[#1a0833]' : 'bg-slate-200 text-slate-800'
-            }`}>
-              {settings.soundEnabled !== false 
-                ? (settings.language === 'fa' ? 'فعال 🔊' : 'ON 🔊') 
-                : (settings.language === 'fa' ? 'بی‌صدا 🔇' : 'MUTED 🔇')}
-            </span>
           </div>
-          <div className="flex gap-2 mt-2">
+
+          {/* 1. Master Sound Toggle */}
+          <div className="bg-[#FAF5FF] p-2.5 rounded-xl border-2 border-[#241442] flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className={`w-6 h-6 rounded-md flex items-center justify-center border border-[#241442] ${
+                settings.soundEnabled !== false ? 'bg-[#39FF14] text-[#1a0833]' : 'bg-[#FF1058] text-white'
+              }`}>
+                {settings.soundEnabled !== false ? <Volume2 size={13} /> : <VolumeX size={13} />}
+              </div>
+              <div>
+                <span className="text-xs font-black text-[#1a0833] block">
+                  {settings.language === 'fa' ? 'صدای کلی (اصلی)' : 'Master Sound'}
+                </span>
+                <span className="text-[9px] text-slate-500 font-bold">
+                  {settings.language === 'fa' ? 'قطع یا وصل تمام صداها با یک کلیک' : 'Mute or enable all sound system'}
+                </span>
+              </div>
+            </div>
+
             <button
               type="button"
               onClick={() => {
-                sound.setMuted(false);
-                sound.playToggle();
-                sound.startMenuBGM();
-                updateSettings('soundEnabled', true);
+                const newState = settings.soundEnabled === false;
+                sound.setMuted(!newState);
+                if (newState) sound.playToggle();
+                updateSettings('soundEnabled', newState);
               }}
-              className={`pixel-btn flex-1 py-2.5 text-xs font-black uppercase flex items-center justify-center gap-1.5 rounded-xl ${
-                settings.soundEnabled !== false 
-                  ? 'pixel-btn-lime text-[#1a0833]' 
-                  : 'pixel-btn-dark text-[#00F0FF]'
+              className={`px-3 py-1.5 rounded-lg border-2 border-[#241442] font-black text-xs transition-all shadow-[2px_2px_0px_0px_#241442] active:translate-y-0.5 ${
+                settings.soundEnabled !== false
+                  ? 'bg-[#39FF14] text-[#1a0833]'
+                  : 'bg-[#241442] text-[#FF1058]'
               }`}
             >
-              <NeonVolume size={18} color={settings.soundEnabled !== false ? '#1a0833' : '#00F0FF'} glow={false} />
-              <span>{settings.language === 'fa' ? 'صدا وصل' : 'Sound ON'}</span>
+              {settings.soundEnabled !== false 
+                ? (settings.language === 'fa' ? 'روشن 🔊' : 'ON 🔊') 
+                : (settings.language === 'fa' ? 'خاموش 🔇' : 'OFF 🔇')}
             </button>
+          </div>
+
+          {/* 2. Sub-controls: SFX and BGM (Active if Master is ON) */}
+          <div className="grid grid-cols-2 gap-2">
+            {/* SFX Button */}
             <button
               type="button"
+              disabled={settings.soundEnabled === false}
               onClick={() => {
-                sound.setMuted(true);
-                updateSettings('soundEnabled', false);
+                const newSfx = settings.sfxEnabled === false;
+                sound.setSfxEnabled(newSfx);
+                if (newSfx) sound.playCorrect();
+                updateSettings('sfxEnabled', newSfx);
               }}
-              className={`pixel-btn flex-1 py-2.5 text-xs font-black uppercase flex items-center justify-center gap-1.5 rounded-xl ${
+              className={`p-2.5 rounded-xl border-2 border-[#241442] flex flex-col items-start justify-between text-start transition-all shadow-[2px_2px_0px_0px_#241442] active:translate-y-0.5 ${
                 settings.soundEnabled === false 
-                  ? 'pixel-btn-pink text-white' 
-                  : 'pixel-btn-dark text-[#00F0FF]'
+                  ? 'opacity-40 bg-slate-100 cursor-not-allowed'
+                  : settings.sfxEnabled !== false
+                    ? 'bg-[#E7FFF3] border-[#241442] ring-1 ring-[#39FF14]'
+                    : 'bg-slate-100 text-slate-500'
               }`}
             >
-              <NeonVolume size={18} color="#FF4A6E" glow={false} muted={true} />
-              <span>{settings.language === 'fa' ? 'قطع صدا' : 'Muted'}</span>
+              <div className="flex items-center justify-between w-full mb-1">
+                <div className="flex items-center gap-1.5">
+                  <Bell size={14} className={settings.sfxEnabled !== false && settings.soundEnabled !== false ? 'text-[#008751]' : 'text-slate-500'} />
+                  <span className="text-xs font-black text-[#1a0833]">
+                    {settings.language === 'fa' ? 'افکت‌ها (SFX)' : 'Effects (SFX)'}
+                  </span>
+                </div>
+                <span className={`text-[9px] px-1.5 py-0.2 rounded font-black border border-[#241442] ${
+                  settings.sfxEnabled !== false && settings.soundEnabled !== false ? 'bg-[#39FF14] text-[#1a0833]' : 'bg-slate-300 text-slate-700'
+                }`}>
+                  {settings.sfxEnabled !== false && settings.soundEnabled !== false ? 'ON' : 'OFF'}
+                </span>
+              </div>
+              <span className="text-[10px] text-slate-600 font-bold leading-tight">
+                {settings.language === 'fa' ? 'تیک‌تاک، حدس، زنگ' : 'Ticks, chimes, buzzers'}
+              </span>
+            </button>
+
+            {/* BGM Button */}
+            <button
+              type="button"
+              disabled={settings.soundEnabled === false}
+              onClick={() => {
+                const newBgm = settings.bgmEnabled === false;
+                sound.setBgmEnabled(newBgm);
+                if (newBgm) {
+                  sound.playToggle();
+                  sound.startMenuBGM();
+                }
+                updateSettings('bgmEnabled', newBgm);
+              }}
+              className={`p-2.5 rounded-xl border-2 border-[#241442] flex flex-col items-start justify-between text-start transition-all shadow-[2px_2px_0px_0px_#241442] active:translate-y-0.5 ${
+                settings.soundEnabled === false 
+                  ? 'opacity-40 bg-slate-100 cursor-not-allowed'
+                  : settings.bgmEnabled !== false
+                    ? 'bg-[#EBF7FF] border-[#241442] ring-1 ring-[#00F0FF]'
+                    : 'bg-slate-100 text-slate-500'
+              }`}
+            >
+              <div className="flex items-center justify-between w-full mb-1">
+                <div className="flex items-center gap-1.5">
+                  <Music size={14} className={settings.bgmEnabled !== false && settings.soundEnabled !== false ? 'text-[#0052CC]' : 'text-slate-500'} />
+                  <span className="text-xs font-black text-[#1a0833]">
+                    {settings.language === 'fa' ? 'موزیک (BGM)' : 'Music (BGM)'}
+                  </span>
+                </div>
+                <span className={`text-[9px] px-1.5 py-0.2 rounded font-black border border-[#241442] ${
+                  settings.bgmEnabled !== false && settings.soundEnabled !== false ? 'bg-[#00F0FF] text-[#1a0833]' : 'bg-slate-300 text-slate-700'
+                }`}>
+                  {settings.bgmEnabled !== false && settings.soundEnabled !== false ? 'ON' : 'OFF'}
+                </span>
+              </div>
+              <span className="text-[10px] text-slate-600 font-bold leading-tight">
+                {settings.language === 'fa' ? 'آهنگ زمینه و ریتم بازی' : 'Menu & dynamic beat'}
+              </span>
             </button>
           </div>
         </section>

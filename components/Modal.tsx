@@ -11,9 +11,10 @@ interface Props {
   title: string;
   body: string;
   actions: Action[];
+  children?: React.ReactNode;
 }
 
-const Modal: React.FC<Props> = ({ title, body, actions }) => {
+const Modal: React.FC<Props> = ({ title, body, actions, children }) => {
   return (
     <div className="fixed inset-0 bg-[#160f2e]/90 backdrop-blur-sm z-[100] flex items-center justify-center p-6 select-none">
       {/* 3D Pixel Double Border Card */}
@@ -31,6 +32,11 @@ const Modal: React.FC<Props> = ({ title, body, actions }) => {
           <p className="text-slate-700 text-xs sm:text-sm font-black bg-indigo-50/80 p-3 border-2 border-indigo-100 rounded-2xl">
             {body}
           </p>
+          {children && (
+            <div className="mt-3 text-start">
+              {children}
+            </div>
+          )}
         </div>
 
         {/* Modal Controls with high-contrast pixel buttons */}

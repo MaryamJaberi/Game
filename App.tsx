@@ -22,7 +22,9 @@ const DEFAULT_SETTINGS: GameSettings = {
   playerNames: Array(8).fill(''),
   language: 'fa',
   passPhoneScreenEnabled: false,
-  soundEnabled: true
+  soundEnabled: true,
+  sfxEnabled: true,
+  bgmEnabled: true
 };
 
 const App: React.FC = () => {
@@ -80,14 +82,20 @@ const App: React.FC = () => {
   }, [settings]);
 
   useEffect(() => {
-    const isSoundOn = settings.soundEnabled ?? true;
-    sound.setSoundEnabled(isSoundOn);
-    if (isSoundOn && currentScreen !== 'GAME') {
+    const isMasterOn = settings.soundEnabled ?? true;
+    const isSfxOn = settings.sfxEnabled ?? true;
+    const isBgmOn = settings.bgmEnabled ?? true;
+
+    sound.setSoundEnabled(isMasterOn);
+    sound.setSfxEnabled(isSfxOn);
+    sound.setBgmEnabled(isBgmOn);
+
+    if (isMasterOn && isBgmOn && currentScreen !== 'GAME') {
       sound.startMenuBGM();
-    } else if (currentScreen === 'GAME') {
+    } else if (!isMasterOn || !isBgmOn || currentScreen === 'GAME') {
       sound.stopMenuBGM();
     }
-  }, [settings.soundEnabled, currentScreen]);
+  }, [settings.soundEnabled, settings.sfxEnabled, settings.bgmEnabled, currentScreen]);
 
   const saveSettings = (newSettings: GameSettings) => {
     setSettings(newSettings);

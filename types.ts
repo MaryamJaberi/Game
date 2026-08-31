@@ -34,6 +34,8 @@ export interface GameSettings {
   playerNames: string[];
   language: Language;
   soundEnabled?: boolean;
+  sfxEnabled?: boolean;
+  bgmEnabled?: boolean;
   passPhoneScreenEnabled?: boolean;
 }
 

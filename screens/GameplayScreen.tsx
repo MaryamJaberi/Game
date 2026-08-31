@@ -12,6 +12,8 @@ import {
   Zap, 
   Volume2, 
   VolumeX, 
+  Music,
+  Bell,
   HelpCircle, 
   Pause, 
   Play, 
@@ -94,14 +96,16 @@ const GameplayScreen: React.FC<Props> = ({
     }
   };
 
-  // Synchronize sound manager mute status with settings
+  // Synchronize sound manager states with settings
   useEffect(() => {
-    sound.setMuted(settings.soundEnabled === false);
-  }, [settings.soundEnabled]);
+    sound.setSoundEnabled(settings.soundEnabled !== false);
+    sound.setSfxEnabled(settings.sfxEnabled !== false);
+    sound.setBgmEnabled(settings.bgmEnabled !== false);
+  }, [settings.soundEnabled, settings.sfxEnabled, settings.bgmEnabled]);
 
   const toggleSound = () => {
     const newSoundState = settings.soundEnabled === false;
-    sound.setMuted(!newSoundState);
+    sound.setSoundEnabled(newSoundState);
     if (newSoundState) {
       sound.playClick();
     }
@@ -110,9 +114,32 @@ const GameplayScreen: React.FC<Props> = ({
     }
   };
 
+  const toggleSfx = () => {
+    const newSfx = settings.sfxEnabled === false;
+    sound.setSfxEnabled(newSfx);
+    if (newSfx) sound.playClick();
+    if (onUpdateSettings) {
+      onUpdateSettings({ ...settings, sfxEnabled: newSfx });
+    }
+  };
+
+  const toggleBgm = () => {
+    const newBgm = settings.bgmEnabled === false;
+    sound.setBgmEnabled(newBgm);
+    if (newBgm && gameStatus === GameStatus.ActiveTurn) {
+      const seconds = Math.ceil(roundTimer / 1000);
+      sound.startGameplayBGM(seconds);
+    } else if (!newBgm) {
+      sound.stopBGM();
+    }
+    if (onUpdateSettings) {
+      onUpdateSettings({ ...settings, bgmEnabled: newBgm });
+    }
+  };
+
   // Start / Stop dynamic BGM on active turn
   useEffect(() => {
-    if (gameStatus === GameStatus.ActiveTurn) {
+    if (gameStatus === GameStatus.ActiveTurn && settings.soundEnabled !== false && settings.bgmEnabled !== false) {
       const seconds = Math.ceil(roundTimer / 1000);
       sound.startGameplayBGM(seconds);
     } else {
@@ -122,7 +149,7 @@ const GameplayScreen: React.FC<Props> = ({
     return () => {
       sound.stopBGM();
     };
-  }, [gameStatus]);
+  }, [gameStatus, settings.soundEnabled, settings.bgmEnabled]);
 
   // Audio Tick & 5-Second Urgent Siren Loop
   useEffect(() => {
@@ -681,7 +708,68 @@ const GameplayScreen: React.FC<Props> = ({
               }
             }
           ]}
-        />
+        >
+          {/* In-Game Audio Quick Toggles */}
+          <div className="bg-[#FAF5FF] p-2.5 rounded-2xl border-2 border-[#241442] mt-2 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-black text-[#1a0833] flex items-center gap-1">
+                <Volume2 size={13} />
+                <span>{language === 'fa' ? 'تنظیمات سریع صدا' : 'Quick Audio Controls'}</span>
+              </span>
+              <button
+                type="button"
+                onClick={toggleSound}
+                className={`text-[10px] px-2 py-0.5 rounded-md font-black border border-[#241442] shadow-[1px_1px_0px_0px_#241442] ${
+                  settings.soundEnabled !== false ? 'bg-[#39FF14] text-[#1a0833]' : 'bg-[#FF1058] text-white'
+                }`}
+              >
+                {settings.soundEnabled !== false 
+                  ? (language === 'fa' ? 'صدای اصلی: وصل' : 'Master: ON') 
+                  : (language === 'fa' ? 'صدای اصلی: قطع' : 'Master: MUTED')}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+              <button
+                type="button"
+                disabled={settings.soundEnabled === false}
+                onClick={toggleSfx}
+                className={`py-1.5 px-2 rounded-lg border border-[#241442] flex items-center justify-between text-[10px] font-black transition-all ${
+                  settings.soundEnabled === false 
+                    ? 'opacity-40 bg-slate-100'
+                    : settings.sfxEnabled !== false 
+                      ? 'bg-[#E7FFF3] text-[#008751]' 
+                      : 'bg-slate-200 text-slate-600'
+                }`}
+              >
+                <span className="flex items-center gap-1">
+                  <Bell size={11} />
+                  <span>{language === 'fa' ? 'افکت‌ها (SFX)' : 'SFX'}</span>
+                </span>
+                <span>{settings.sfxEnabled !== false && settings.soundEnabled !== false ? 'ON' : 'OFF'}</span>
+              </button>
+
+              <button
+                type="button"
+                disabled={settings.soundEnabled === false}
+                onClick={toggleBgm}
+                className={`py-1.5 px-2 rounded-lg border border-[#241442] flex items-center justify-between text-[10px] font-black transition-all ${
+                  settings.soundEnabled === false 
+                    ? 'opacity-40 bg-slate-100'
+                    : settings.bgmEnabled !== false 
+                      ? 'bg-[#EBF7FF] text-[#0052CC]' 
+                      : 'bg-slate-200 text-slate-600'
+                }`}
+              >
+                <span className="flex items-center gap-1">
+                  <Music size={11} />
+                  <span>{language === 'fa' ? 'موزیک (BGM)' : 'BGM'}</span>
+                </span>
+                <span>{settings.bgmEnabled !== false && settings.soundEnabled !== false ? 'ON' : 'OFF'}</span>
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
 
       {/* ROUND END MODAL */}
