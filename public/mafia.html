@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>میز خدا</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<style>
+:root{--bg:#1c1b1a;--p:#262422;--p2:#322f2c;--ink:#efe8da;--m:#a59f92;--l:#3a3633;--a:#d99a3c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,sans-serif}
+body{max-width:520px;margin:0 auto;padding:18px}
+button,input{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer}
+.cta{width:100%;padding:13px;border-radius:14px;font-weight:800;background:var(--a);color:#1c1b1a;margin-top:8px}
+.ghost{background:var(--p2);color:var(--ink);border:1px solid var(--l)}
+.hero{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.mark{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--a),#8a5a18);display:grid;place-items:center}
+.mute{color:var(--m);font-size:13px;line-height:1.7}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;background:var(--p);border:1px solid var(--l);border-radius:14px;padding:10px;margin:8px 0}
+.plist input{width:100%;background:transparent;border:0;outline:0;padding:6px}
+.seat{display:flex;justify-content:space-between;align-items:center;background:var(--p);border:1px solid var(--l);border-radius:12px;padding:10px;margin:6px 0}
+.dead{opacity:.45}
+.ans{margin:8px 0;padding:10px;border-radius:12px;text-align:center;font-weight:800}
+.pos{background:#3a1d22;color:#f0b4b0}.neg{background:#1d3328;color:#b7e0c4}
+</style></head>
+<body>
+<div id="app"></div>
+<script>
+const FA='\u06f0\u06f1\u06f2\u06f3\u06f4\u06f5\u06f6\u06f7\u06f8\u06f9';
+const fa=n=>String(n).replace(/\d/g,d=>FA[+d]);
+const NAMES=['\u0622\u0631\u0634','\u0633\u0627\u0631\u0627','\u0628\u0647\u0646\u0627\u0645','\u0645\u0647\u0633\u0627','\u06a9\u0627\u0648\u0647','\u0646\u06af\u0627\u0631','\u067e\u0648\u06cc\u0627','\u0644\u06cc\u0644\u0627','\u0631\u0636\u0627','\u062a\u06cc\u0646\u0627','\u0627\u0645\u06cc\u0631','\u0634\u06cc\u0645\u0627'];
+const ROLE={godfather:{n:'\u067e\u062f\u0631\u062e\u0648\u0627\u0646\u062f\u0647',t:'m',inq:'t'},mafia:{n:'\u0645\u0627\u0641\u06cc\u0627',t:'m',inq:'m'},doctor:{n:'\u062f\u06a9\u062a\u0631',t:'t',inq:'t'},detective:{n:'\u06a9\u0627\u0631\u0622\u06af\u0627\u0647',t:'t',inq:'t'},citizen:{n:'\u0634\u0647\u0631\u0648\u0646\u062f',t:'t',inq:'t'}};
+const ICO={godfather:'\ud83c\udfa9',mafia:'\ud83c\udccf',doctor:'\ud83d\udc89',detective:'\ud83d\udd0d',citizen:'\ud83d\ude42'};
+let n=8,names=NAMES.slice(0,8),players=[],phase='setup',acts={},votes={},msg='';
+const app=document.getElementById('app');
+const alive=()=>players.filter(p=>p.a);
+const team=id=>ROLE[id].t;
+function pool(c){const p=['godfather','mafia','doctor','detective'];const want=Math.max(1,Math.floor(c/3));while(p.filter(r=>team(r)==='m').length<want)p.push('mafia');while(p.length<c)p.push('citizen');return p.slice(0,c)}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function start(){const p=shuffle(pool(n));players=names.slice(0,n).map((nm,i)=>({id:i+1,name:nm||('\u0628\u0627\u0632\u06cc\u06a9\u0646 '+(i+1)),role:p[i],a:true}));phase='roles';acts={};votes={};msg='';render()}
+function win(){const a=alive(),m=a.filter(p=>team(p.role)==='m');if(!m.length)return '\u0634\u0647\u0631 \u067e\u06cc\u0631\u0648\u0632 \u0634\u062f';if(m.length>=a.length-m.length)return '\u0645\u0627\u0641\u06cc\u0627 \u067e\u06cc\u0631\u0648\u0632 \u0634\u062f';return null}
+function nightDone(){const shot=acts.shot,save=acts.save;let text='\u0635\u0628\u062d \u0634\u062f. \u06a9\u0633\u06cc \u06a9\u0634\u062a\u0647 \u0646\u0634\u062f.';if(shot&&shot!==save){const t=players.find(p=>p.id===shot);if(t&&t.a){t.a=false;text='\u0635\u0628\u062d \u0634\u062f. '+t.name+' \u062d\u0630\u0641 \u0634\u062f.';}}const w=win();if(w){phase='end';msg=w;}else{phase='day';msg=text;}render()}
+function voteOut(){let max=0,w=[];for(const [id,c] of Object.entries(votes)){if(c>max){max=c;w=[+id]}else if(c===max&&c>0)w.push(+id)}if(max<=0){msg='\u06a9\u0633\u06cc \u062d\u0630\u0641 \u0646\u0634\u062f';phase='night';acts={};render();return}if(w.length>1){msg='\u062a\u0633\u0627\u0648\u06cc \u0622\u0631\u0627';votes={};render();return}const t=players.find(p=>p.id===w[0]);if(t)t.a=false;const r=win();phase=r?'end':'night';msg=r||(t.name+' \u062d\u0630\u0641 \u0634\u062f');acts={};votes={};render()}
+function render(){
+if(phase==='setup'){
+app.innerHTML=`<div class="hero"><div class="mark">\u2660</div><div><h1>\u0645\u06cc\u0632 \u062e\u062f\u0627</h1><p class="mute">\u0648\u0628\u0633\u0627\u06cc\u062a \u06af\u0631\u062f\u0627\u0646\u0646\u062f\u0647 \u2014 \u0628\u062f\u0648\u0646 \u0633\u0631\u0648\u0631</p></div></div><div class="row"><button class="ghost" id="d">\u2212</button><b>${fa(n)} \u0628\u0627\u0632\u06cc\u06a9\u0646</b><button class="ghost" id="i">+</button></div><div id="pl"></div><p class="mute">\u0633\u0646\u0627\u0631\u06cc\u0648 \u06a9\u0644\u0627\u0633\u06cc\u06a9. \u067e\u062f\u0631\u062e\u0648\u0627\u0646\u062f\u0647 \u062f\u0631 \u0627\u0633\u062a\u0639\u0644\u0627\u0645 \u0645\u0646\u0641\u06cc \u0627\u0633\u062a.</p><button class="cta" id="go">\u0634\u0631\u0648\u0639 \u0628\u0627\u0632\u06cc</button>`;
+const box=document.getElementById('pl');
+names.slice(0,n).forEach((nm,i)=>{const d=document.createElement('div');d.className='row plist';d.innerHTML=`<span>${fa(i+1)}</span>`;const inp=document.createElement('input');inp.value=nm;inp.oninput=()=>names[i]=inp.value;d.appendChild(inp);box.appendChild(d)});
+document.getElementById('i').onclick=()=>{if(n<12){n++;names[n-1]=NAMES[n-1]||('\u0628\u0627\u0632\u06cc\u06a9\u0646 '+n);render()}};
+document.getElementById('d').onclick=()=>{if(n>4){n--;names=names.slice(0,n);render()}};
+document.getElementById('go').onclick=start;return}
+const list=players.map(p=>`<div class="seat ${p.a?'':'dead'}"><div>${ICO[p.role]} <b>${p.name}</b><div class="mute">${p.a?ROLE[p.role].n:'\u062d\u0630\u0641\u200c\u0634\u062f\u0647'}</div></div><div>${phase==='vote'&&p.a?`<button class="ghost" data-v="${p.id}">\u0631\u0623\u06cc ${fa(votes[p.id]||0)}</button>`:''}</div></div>`).join('');
+if(phase==='roles'){app.innerHTML=`<h1>\u067e\u062e\u0634 \u0646\u0642\u0634</h1><p class="mute">\u0646\u0642\u0634 \u0647\u0631 \u0646\u0641\u0631 \u0631\u0627 \u0641\u0642\u0637 \u0628\u0647 \u062e\u0648\u062f\u0634 \u0646\u0634\u0627\u0646 \u0628\u062f\u0647.</p>${list}<button class="cta" id="n">\u0634\u0631\u0648\u0639 \u0634\u0628</button>`;document.getElementById('n').onclick=()=>{phase='night';render()};return}
+if(phase==='night'){
+const step=!acts.shot?'shot':!('save' in acts)?'save':!('inq' in acts)?'inq':'done';
+const title=step==='shot'?'\u062a\u06cc\u0645 \u0645\u0627\u0641\u06cc\u0627':' '+'' ;
+const titles={shot:'\u062a\u06cc\u0645 \u0645\u0627\u0641\u06cc\u0627 \u2014 \u0634\u0644\u06cc\u06a9',save:'\u062f\u06a9\u062a\u0631 \u2014 \u0646\u062c\u0627\u062a',inq:'\u06a9\u0627\u0631\u0622\u06af\u0627\u0647 \u2014 \u0627\u0633\u062a\u0639\u0644\u0627\u0645',done:'\u0634\u0628 \u062a\u0645\u0627\u0645'};
+const tg=alive().map(p=>`<button class="cta ghost" data-id="${p.id}">${p.name}</button>`).join('');
+app.innerHTML=`<h1>${titles[step]}</h1><p class="mute">${msg||''}</p>${list}<div id="tg">${step==='done'?'':tg}</div>${step==='done'?'<button class="cta" id="m">\u0627\u0639\u0644\u0627\u0645 \u0635\u0628\u062d</button>':'<button class="cta ghost" id="sk">\u0628\u062f\u0648\u0646 \u0627\u0642\u062f\u0627\u0645</button>'}<div id="ans"></div>`;
+app.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{const id=+b.dataset.id;if(step==='shot')acts.shot=id;else if(step==='save')acts.save=id;else if(step==='inq'){const t=players.find(p=>p.id===id);acts.inq=id;const pos=ROLE[t.role].inq==='m';document.getElementById('ans').innerHTML=`<div class="ans ${pos?'pos':'neg'}">${t.name}: ${pos?'\u0645\u062b\u0628\u062a \u2014 \u0645\u0627\u0641\u06cc\u0627':'\u0645\u0646\u0641\u06cc \u2014 \u0634\u0647\u0631'}</div>`;setTimeout(render,600);return}render()});
+const sk=document.getElementById('sk');if(sk)sk.onclick=()=>{if(step==='shot')acts.shot=null;else if(step==='save')acts.save=null;else acts.inq=null;render()};
+const m=document.getElementById('m');if(m)m.onclick=nightDone;return}
+if(phase==='day'||phase==='vote'){
+app.innerHTML=`<h1>${phase==='vote'?'\u0631\u0623\u06cc\u200c\u06af\u06cc\u0631\u06cc':'\u0631\u0648\u0632'}</h1><p class="mute">${msg||'\u0635\u062d\u0628\u062a \u060c \u0628\u0639\u062f \u0631\u0623\u06cc.'}</p>${list}<button class="cta" id="v">${phase==='vote'?'\u0634\u0645\u0627\u0631\u0634 \u0622\u0631\u0627':'\u0634\u0631\u0648\u0639 \u0631\u0623\u06cc'}</button>`;
+app.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{votes[+b.dataset.v]=(votes[+b.dataset.v]||0)+1;render()});
+document.getElementById('v').onclick=()=>{if(phase==='day'){phase='vote';render()}else voteOut()};return}
+app.innerHTML=`<h1>\u067e\u0627\u06cc\u0627\u0646</h1><p class="ans">${msg}</p>${list}<button class="cta" id="again">\u0628\u0627\u0632\u06cc \u062c\u062f\u06cc\u062f</button>`;
+document.getElementById('again').onclick=()=>{phase='setup';render()}
+}
+render();
+</script></body></html>
